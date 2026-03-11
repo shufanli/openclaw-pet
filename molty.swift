@@ -1,7 +1,7 @@
 import AppKit
 import WebKit
 
-// ─── Soul 分析 ───────────────────────────────
+// ── Soul 分析 ─────────────────────────────────────────────────────────────────
 func analyzeSoul() -> String {
     let home = NSHomeDirectory()
     let paths = [
@@ -24,31 +24,39 @@ func analyzeSoul() -> String {
     return "classic"
 }
 
-// ─── HTML 模板：经典款 ────────────────────────
+// ── Classic 🦞 ────────────────────────────────────────────────────────────────
 let classicHTML = #"""
 <!DOCTYPE html><html><head><meta charset="UTF-8"><style>
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{background:transparent!important;width:200px;height:250px;overflow:hidden;-webkit-user-select:none}
+html,body{background:transparent!important;width:200px;height:290px;overflow:hidden;-webkit-user-select:none;font-family:-apple-system,sans-serif}
 @keyframes B{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
 @keyframes WL{0%,100%{transform:rotate(0);transform-origin:80% 80%}40%{transform:rotate(-28deg);transform-origin:80% 80%}}
 @keyframes WR{0%,100%{transform:rotate(0);transform-origin:20% 80%}40%{transform:rotate(28deg);transform-origin:20% 80%}}
-@keyframes BL{0%,88%,100%{transform:scaleY(1)}93%{transform:scaleY(0.08)}}
+@keyframes BLK{0%,88%,100%{transform:scaleY(1)}93%{transform:scaleY(0.08)}}
 @keyframes AL{0%,100%{transform:rotate(0);transform-origin:70% 100%}50%{transform:rotate(-8deg);transform-origin:70% 100%}}
 @keyframes AR{0%,100%{transform:rotate(0);transform-origin:30% 100%}50%{transform:rotate(8deg);transform-origin:30% 100%}}
-.b{animation:B 2s ease-in-out infinite}
-.cl{animation:WL 3s ease-in-out infinite .5s}
-.cr{animation:WR 3s ease-in-out infinite}
-.ey{animation:BL 4s ease-in-out infinite}
-.al{animation:AL 2.5s ease-in-out infinite}
-.ar{animation:AR 2.5s ease-in-out infinite .3s}
+@keyframes JMP{0%{transform:translateY(0) scale(1)}20%{transform:translateY(-30px) scale(1.08) rotate(-6deg)}60%{transform:translateY(-18px) scale(0.95) rotate(4deg)}85%{transform:translateY(-3px) rotate(-1deg)}100%{transform:translateY(0) scale(1) rotate(0)}}
+@keyframes SHK{0%,100%{transform:translateX(0) rotate(0)}15%{transform:translateX(-9px) rotate(-6deg)}35%{transform:translateX(9px) rotate(6deg)}55%{transform:translateX(-6px) rotate(-4deg)}75%{transform:translateX(6px) rotate(4deg)}}
+@keyframes DRG{0%,100%{transform:rotate(-4deg) scale(1.05)}50%{transform:rotate(4deg) scale(1.05)}}
+.b{animation:B 2s ease-in-out infinite;cursor:grab}
+.cl{animation:WL 3s ease-in-out infinite .5s}.cr{animation:WR 3s ease-in-out infinite}
+.ey{animation:BLK 4s ease-in-out infinite}.al{animation:AL 2.5s ease-in-out infinite}.ar{animation:AR 2.5s ease-in-out infinite .3s}
+.b:hover{filter:brightness(1.15) drop-shadow(0 0 10px rgba(232,67,58,0.5))}
+.b.jmp{animation:B 2s ease-in-out infinite,JMP 0.6s ease-out!important}
+.b.shk{animation:SHK 0.55s ease-in-out!important}
+.b.drg{animation:DRG 0.35s ease-in-out infinite!important;cursor:grabbing}
+.bubble{position:absolute;top:3px;left:50%;transform:translateX(-50%) scale(0.8) translateY(5px);background:#fff;border:2.5px solid #E8433A;border-radius:16px;padding:5px 14px;font-size:12px;font-weight:700;color:#C0392B;white-space:nowrap;opacity:0;transition:all 0.22s cubic-bezier(.34,1.56,.64,1);pointer-events:none;z-index:10;box-shadow:0 4px 16px rgba(232,67,58,0.18)}
+.bubble.show{opacity:1;transform:translateX(-50%) scale(1) translateY(0)}
+.bubble::after{content:'';position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);border:4px solid transparent;border-top-color:#E8433A}
 </style></head><body>
-<svg viewBox="0 0 130 160" width="200" height="246" xmlns="http://www.w3.org/2000/svg">
+<div class="bubble" id="bubble"></div>
+<svg viewBox="0 0 130 160" width="196" height="241" xmlns="http://www.w3.org/2000/svg" style="margin:26px auto 0;display:block">
 <ellipse cx="65" cy="148" rx="30" ry="6" fill="#E8433A" opacity="0.12"/>
 <g class="al"><path d="M 46 26 Q 28 12 18 2" stroke="#C0392B" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="18" cy="2" r="3" fill="#E8433A"/></g>
 <g class="ar"><path d="M 84 26 Q 102 12 112 2" stroke="#C0392B" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="112" cy="2" r="3" fill="#E8433A"/></g>
 <path d="M 50 30 Q 38 22 32 16" stroke="#C0392B" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.7"/>
 <path d="M 80 30 Q 92 22 98 16" stroke="#C0392B" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.7"/>
-<g class="b">
+<g class="b" id="body">
 <ellipse cx="65" cy="44" rx="24" ry="20" fill="#E8433A"/>
 <polygon points="65,18 59,30 71,30" fill="#C0392B"/>
 <path d="M 42 46 Q 65 42 88 46" stroke="#C0392B" stroke-width="1.5" fill="none"/>
@@ -56,7 +64,8 @@ html,body{background:transparent!important;width:200px;height:250px;overflow:hid
 <rect x="77" y="32" width="7" height="11" rx="3.5" fill="#C0392B"/>
 <g class="ey">
 <circle cx="50" cy="31" r="10" fill="white"/><circle cx="80" cy="31" r="10" fill="white"/>
-<circle cx="52" cy="32" r="6" fill="#1A0000"/><circle cx="82" cy="32" r="6" fill="#1A0000"/>
+<circle id="plL" cx="52" cy="32" r="6" fill="#1A0000"/>
+<circle id="plR" cx="82" cy="32" r="6" fill="#1A0000"/>
 <circle cx="54" cy="29" r="2.5" fill="white"/><circle cx="84" cy="29" r="2.5" fill="white"/>
 </g>
 <path d="M 56 52 Q 65 58 74 52" stroke="#C0392B" stroke-width="2" fill="none" stroke-linecap="round"/>
@@ -89,46 +98,82 @@ html,body{background:transparent!important;width:200px;height:250px;overflow:hid
 <path d="M 116 72 L 108 82" stroke="#C0392B" stroke-width="1.5" stroke-linecap="round"/>
 </g>
 </svg>
-</body></html>
+<script>
+const MSGS=["今天也要努力！","龙虾永不摆烂！","蜕壳中...","摸鱼一下？","别戳我！","好饿啊...","✨加油✨","嗷嗷嗷！","哼哼哼","大虾驾到～"];
+const IDLE=["...","👀","嗯~","哈欠～🥱","困了zZ","嘿！在吗？","（若有所思）","嘿嘿","小摸一下鱼","想什么呢"];
+let mi=0,ii=0,bt,cc=0,ct;
+const bub=document.getElementById('bubble');
+const body=document.getElementById('body');
+const plL=document.getElementById('plL');
+const plR=document.getElementById('plR');
+function showBubble(t,d){clearTimeout(bt);bub.textContent=t;bub.classList.add('show');bt=setTimeout(()=>bub.classList.remove('show'),d||2400);}
+function onPetClick(){
+  cc++;clearTimeout(ct);ct=setTimeout(()=>cc=0,700);
+  if(cc>=5){cc=0;body.classList.remove('shk');void body.offsetWidth;body.classList.add('shk');setTimeout(()=>body.classList.remove('shk'),600);showBubble('😵 停！别戳了！',2000);return;}
+  body.classList.remove('jmp');void body.offsetWidth;body.classList.add('jmp');
+  showBubble(MSGS[mi++%MSGS.length]);setTimeout(()=>body.classList.remove('jmp'),650);
+}
+function onDragStart(){body.classList.remove('jmp');body.classList.add('drg');showBubble('woah～🌀',1200);}
+function onDragEnd(){body.classList.remove('drg');}
+function movePupil(el,bx,by,tx,ty){const dx=tx-bx,dy=ty-by,d=Math.sqrt(dx*dx+dy*dy),R=4,s=d>R?R/d:1;el.setAttribute('cx',bx+dx*s);el.setAttribute('cy',by+dy*s);}
+document.addEventListener('mousemove',function(e){
+  const r=document.querySelector('svg').getBoundingClientRect();
+  const sx=(e.clientX-r.left)/r.width*130,sy=(e.clientY-r.top)/r.height*160;
+  movePupil(plL,50,31,sx,sy);movePupil(plR,80,31,sx,sy);
+});
+(function idle(){setTimeout(function(){showBubble(IDLE[ii++%IDLE.length],2200);idle();},14000+Math.random()*16000);})();
+</script></body></html>
 """#
 
-// ─── HTML 模板：赛博款 ────────────────────────
+// ── Cyber ⚡ ───────────────────────────────────────────────────────────────────
 let cyberHTML = #"""
 <!DOCTYPE html><html><head><meta charset="UTF-8"><style>
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{background:transparent!important;width:200px;height:250px;overflow:hidden;-webkit-user-select:none}
+html,body{background:transparent!important;width:200px;height:290px;overflow:hidden;-webkit-user-select:none;font-family:monospace}
 @keyframes F{0%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-6px) rotate(-1deg)}75%{transform:translateY(-4px) rotate(1deg)}}
 @keyframes GW{0%,100%{filter:drop-shadow(0 0 8px #00FFCC) drop-shadow(0 0 20px rgba(0,255,204,.4))}50%{filter:drop-shadow(0 0 16px #00FFCC) drop-shadow(0 0 44px rgba(0,255,204,.7))}}
 @keyframes ES{0%,100%{fill:#00FFCC}50%{fill:#FF2D78}}
 @keyframes GL{0%,88%,100%{transform:translate(0)}91%{transform:translate(-2px,1px)}94%{transform:translate(2px,-1px)}}
 @keyframes TY{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
-.b{animation:F 3s ease-in-out infinite,GL 8s ease-in-out infinite}
-.gw{animation:GW 2s ease-in-out infinite}
-.ey{animation:ES 3s ease-in-out infinite}
-.cl{animation:TY 1.5s ease-in-out infinite}
-.cr{animation:TY 1.5s ease-in-out infinite .75s}
+@keyframes JMP{0%{transform:translateY(0) scale(1)}20%{transform:translateY(-28px) scale(1.06) rotate(-4deg)}60%{transform:translateY(-16px) scale(0.96) rotate(3deg)}85%{transform:translateY(-2px)}100%{transform:translateY(0) scale(1) rotate(0)}}
+@keyframes SHK{0%,100%{transform:translateX(0)}15%{transform:translateX(-8px)}35%{transform:translateX(8px)}55%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+@keyframes DRG{0%,100%{transform:rotate(-3deg) scale(1.04)}50%{transform:rotate(3deg) scale(1.06)}}
+@keyframes SCAN{0%{transform:translateY(-100%)}100%{transform:translateY(400%)}}
+.b{animation:F 3s ease-in-out infinite,GL 8s ease-in-out infinite;cursor:grab}
+.gw{animation:GW 2s ease-in-out infinite}.ey{animation:ES 3s ease-in-out infinite}
+.cl{animation:TY 1.5s ease-in-out infinite}.cr{animation:TY 1.5s ease-in-out infinite .75s}
+.b:hover{filter:drop-shadow(0 0 20px #00FFCC) drop-shadow(0 0 40px rgba(0,255,204,0.6))!important}
+.b.jmp{animation:F 3s ease-in-out infinite,JMP 0.55s ease-out!important}
+.b.shk{animation:SHK 0.5s ease-in-out!important}
+.b.drg{animation:DRG 0.3s ease-in-out infinite!important;cursor:grabbing}
+.bubble{position:absolute;top:3px;left:50%;transform:translateX(-50%) scale(0.85) translateY(4px);background:#0D1A14;border:1px solid #00FFCC;border-radius:4px;padding:5px 14px;font-size:11px;color:#00FFCC;white-space:nowrap;opacity:0;transition:all 0.15s ease;pointer-events:none;z-index:10;box-shadow:0 0 14px rgba(0,255,204,0.35);text-shadow:0 0 8px #00FFCC;letter-spacing:0.05em}
+.bubble::before{content:'> ';opacity:0.6}
+.bubble.show{opacity:1;transform:translateX(-50%) scale(1) translateY(0)}
+.bubble::after{content:'';position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);border:4px solid transparent;border-top-color:#00FFCC}
+.scanline{position:absolute;top:0;left:0;width:100%;height:3px;background:linear-gradient(transparent,rgba(0,255,204,0.08),transparent);animation:SCAN 4s linear infinite;pointer-events:none;z-index:5}
 </style></head><body>
-<svg viewBox="0 0 130 160" width="200" height="246" xmlns="http://www.w3.org/2000/svg">
+<div class="bubble" id="bubble"></div>
+<div class="scanline"></div>
+<svg viewBox="0 0 130 160" width="196" height="241" xmlns="http://www.w3.org/2000/svg" style="margin:26px auto 0;display:block">
 <g opacity="0.12" font-family="monospace" font-size="8" fill="#00FFCC">
 <text x="8" y="20">01</text><text x="8" y="32">10</text><text x="110" y="25">10</text><text x="110" y="37">01</text>
-<text x="4" y="80">11</text><text x="115" y="75">00</text><text x="6" y="130">01</text><text x="112" y="125">10</text>
-</g>
+<text x="4" y="80">11</text><text x="115" y="75">00</text></g>
 <g class="gw"><ellipse cx="65" cy="80" rx="45" ry="55" fill="none" stroke="#00FFCC" stroke-width="1" opacity="0.2"/></g>
 <path d="M 46 26 Q 28 12 18 2" stroke="#00FFCC" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.8"/>
 <circle cx="18" cy="2" r="3" fill="#00FFCC"/>
 <path d="M 84 26 Q 102 12 112 2" stroke="#00FFCC" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.8"/>
 <circle cx="112" cy="2" r="3" fill="#00FFCC"/>
-<g class="b">
+<g class="b" id="body">
 <ellipse cx="65" cy="44" rx="24" ry="20" fill="#0D0D1A" stroke="#00FFCC" stroke-width="1.5" opacity="0.9"/>
 <polygon points="65,18 59,30 71,30" fill="#0D0D1A" stroke="#00FFCC" stroke-width="1"/>
 <rect x="46" y="32" width="7" height="11" rx="3.5" fill="#0A0A14" stroke="#00FFCC" stroke-width="0.8"/>
 <rect x="77" y="32" width="7" height="11" rx="3.5" fill="#0A0A14" stroke="#00FFCC" stroke-width="0.8"/>
 <circle cx="50" cy="31" r="10" fill="#001A14" stroke="#00FFCC" stroke-width="1"/>
 <circle cx="80" cy="31" r="10" fill="#001A14" stroke="#00FFCC" stroke-width="1"/>
-<circle class="ey" cx="52" cy="32" r="6" fill="#00FFCC"/>
-<circle class="ey" cx="82" cy="32" r="6" fill="#00FFCC" style="animation-delay:1.5s"/>
-<line x1="42" y1="32" x2="58" y2="32" stroke="#fff" stroke-width="1.5" opacity="0.5"/>
-<line x1="72" y1="32" x2="88" y2="32" stroke="#fff" stroke-width="1.5" opacity="0.5"/>
+<circle class="ey" id="plL" cx="52" cy="32" r="6" fill="#00FFCC"/>
+<circle class="ey" id="plR" cx="82" cy="32" r="6" fill="#00FFCC" style="animation-delay:1.5s"/>
+<line x1="42" y1="32" x2="58" y2="32" stroke="#fff" stroke-width="1.5" opacity="0.4"/>
+<line x1="72" y1="32" x2="88" y2="32" stroke="#fff" stroke-width="1.5" opacity="0.4"/>
 <path d="M 56 52 L 60 56 L 70 56 L 74 52 L 70 48 L 60 48 Z" fill="none" stroke="#00FFCC" stroke-width="1" opacity="0.7"/>
 <text x="62" y="55" font-family="monospace" font-size="5" fill="#00FFCC">&gt;_</text>
 <ellipse cx="65" cy="90" rx="20" ry="28" fill="#0D0D1A" stroke="#00FFCC" stroke-width="1.2" opacity="0.8"/>
@@ -163,41 +208,72 @@ html,body{background:transparent!important;width:200px;height:250px;overflow:hid
 </g>
 <text x="10" y="155" font-family="monospace" font-size="7" fill="#00FFCC" opacity="0.35">EXFOLIATE!</text>
 </svg>
-</body></html>
+<script>
+const MSGS=["EXFOLIATE!","git push --force","sudo make me","while(true){hustle()}","segfault in soul.md","// TODO: sleep","rm -rf 拖延症","hello, world!","404: 摸鱼未找到","npm install life"];
+const IDLE=["pinging...","null","> _","loading...","404:motivation","[object Object]","undefined","NaN","..."];
+let mi=0,ii=0,bt,cc=0,ct;
+const bub=document.getElementById('bubble');
+const body=document.getElementById('body');
+const plL=document.getElementById('plL');
+const plR=document.getElementById('plR');
+function showBubble(t,d){clearTimeout(bt);bub.textContent=t;bub.classList.add('show');bt=setTimeout(()=>bub.classList.remove('show'),d||2400);}
+function onPetClick(){
+  cc++;clearTimeout(ct);ct=setTimeout(()=>cc=0,700);
+  if(cc>=5){cc=0;body.classList.remove('shk');void body.offsetWidth;body.classList.add('shk');setTimeout(()=>body.classList.remove('shk'),600);showBubble('ERROR: too many requests',2200);return;}
+  body.classList.remove('jmp');void body.offsetWidth;body.classList.add('jmp');
+  showBubble(MSGS[mi++%MSGS.length]);setTimeout(()=>body.classList.remove('jmp'),650);
+}
+function onDragStart(){body.classList.remove('jmp');body.classList.add('drg');showBubble('DRAG EVENT FIRED',1000);}
+function onDragEnd(){body.classList.remove('drg');}
+function movePupil(el,bx,by,tx,ty){const dx=tx-bx,dy=ty-by,d=Math.sqrt(dx*dx+dy*dy),R=4,s=d>R?R/d:1;el.setAttribute('cx',bx+dx*s);el.setAttribute('cy',by+dy*s);}
+document.addEventListener('mousemove',function(e){
+  const r=document.querySelector('svg').getBoundingClientRect();
+  const sx=(e.clientX-r.left)/r.width*130,sy=(e.clientY-r.top)/r.height*160;
+  movePupil(plL,50,31,sx,sy);movePupil(plR,80,31,sx,sy);
+});
+(function idle(){setTimeout(function(){showBubble(IDLE[ii++%IDLE.length],2200);idle();},14000+Math.random()*16000);})();
+</script></body></html>
 """#
 
-// ─── HTML 模板：禅意款 ────────────────────────
+// ── Zen ✦ ─────────────────────────────────────────────────────────────────────
 let zenHTML = #"""
 <!DOCTYPE html><html><head><meta charset="UTF-8"><style>
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{background:transparent!important;width:200px;height:262px;overflow:hidden;-webkit-user-select:none}
+html,body{background:transparent!important;width:200px;height:290px;overflow:hidden;-webkit-user-select:none;font-family:-apple-system,sans-serif}
 @keyframes ZF{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-14px) scale(1.02)}}
 @keyframes AU{0%,100%{transform:scale(1);opacity:.3}50%{transform:scale(1.45);opacity:.08}}
 @keyframes BR{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.15);opacity:1}}
 @keyframes S1{0%{transform:translate(0,0) scale(1);opacity:.8}100%{transform:translate(-8px,-44px) scale(.2);opacity:0}}
 @keyframes S2{0%{transform:translate(0,0) scale(1);opacity:.7}100%{transform:translate(10px,-40px) scale(.2);opacity:0}}
 @keyframes S3{0%{transform:translate(0,0) scale(1);opacity:.6}100%{transform:translate(16px,-36px) scale(.2);opacity:0}}
-.b{animation:ZF 4s ease-in-out infinite}
-.au{animation:AU 4s ease-in-out infinite}
-.br{animation:BR 4s ease-in-out infinite}
-.s1{animation:S1 3s ease-out infinite}
-.s2{animation:S2 3s ease-out infinite 1s}
-.s3{animation:S3 3s ease-out infinite 2s}
+@keyframes JMP{0%{transform:translateY(0) scale(1)}25%{transform:translateY(-20px) scale(1.05)}60%{transform:translateY(-12px) scale(0.97)}85%{transform:translateY(-2px)}100%{transform:translateY(0) scale(1)}}
+@keyframes SHK{0%,100%{transform:rotate(0)}20%{transform:rotate(-5deg)}40%{transform:rotate(5deg)}60%{transform:rotate(-3deg)}80%{transform:rotate(3deg)}}
+@keyframes DRG{0%,100%{transform:rotate(-2deg) scale(1.03)}50%{transform:rotate(2deg) scale(1.03)}}
+.b{animation:ZF 4s ease-in-out infinite;cursor:grab}
+.au{animation:AU 4s ease-in-out infinite}.br{animation:BR 4s ease-in-out infinite}
+.s1{animation:S1 3s ease-out infinite}.s2{animation:S2 3s ease-out infinite 1s}.s3{animation:S3 3s ease-out infinite 2s}
+.b:hover{filter:drop-shadow(0 0 16px rgba(167,139,250,0.6)) brightness(1.08)}
+.b.jmp{animation:ZF 4s ease-in-out infinite,JMP 0.7s ease-out!important}
+.b.shk{animation:SHK 0.6s ease-in-out!important}
+.b.drg{animation:DRG 0.45s ease-in-out infinite!important;cursor:grabbing}
+.bubble{position:absolute;top:3px;left:50%;transform:translateX(-50%) scale(0.85) translateY(5px);background:rgba(237,233,254,0.94);border:1.5px solid #A78BFA;border-radius:20px;padding:6px 16px;font-size:12px;color:#5B21B6;white-space:nowrap;opacity:0;transition:all 0.35s cubic-bezier(.34,1.56,.64,1);pointer-events:none;z-index:10;backdrop-filter:blur(8px);box-shadow:0 4px 20px rgba(167,139,250,0.2)}
+.bubble.show{opacity:1;transform:translateX(-50%) scale(1) translateY(0)}
+.bubble::after{content:'';position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);border:4px solid transparent;border-top-color:#A78BFA}
 </style></head><body>
-<svg viewBox="0 0 130 170" width="200" height="261" xmlns="http://www.w3.org/2000/svg">
+<div class="bubble" id="bubble"></div>
+<svg viewBox="0 0 130 170" width="192" height="251" xmlns="http://www.w3.org/2000/svg" style="margin:26px auto 0;display:block">
 <circle cx="15" cy="15" r="1" fill="#A78BFA" opacity="0.5"/>
 <circle cx="115" cy="20" r="1.5" fill="#A78BFA" opacity="0.3"/>
-<circle cx="65" cy="10" r="1" fill="white" opacity="0.3"/>
 <g class="s1"><text x="26" y="55" font-size="10" fill="#A78BFA">✦</text></g>
 <g class="s2"><text x="96" y="65" font-size="8" fill="#C4B5FD">✧</text></g>
 <g class="s3"><text x="46" y="45" font-size="7" fill="#A78BFA">·</text></g>
-<g class="au"><circle cx="65" cy="85" r="52" fill="none" stroke="#A78BFA" stroke-width="1" opacity="0.15"/></g>
-<g class="br"><circle cx="65" cy="85" r="38" fill="none" stroke="#C4B5FD" stroke-width="1.5" opacity="0.2"/></g>
+<g class="au"><circle cx="65" cy="90" r="52" fill="none" stroke="#A78BFA" stroke-width="1" opacity="0.15"/></g>
+<g class="br"><circle cx="65" cy="90" r="38" fill="none" stroke="#C4B5FD" stroke-width="1.5" opacity="0.2"/></g>
 <path d="M 46 26 Q 30 18 22 8" stroke="#7C3AED" stroke-width="2.5" fill="none" stroke-linecap="round"/>
 <circle cx="22" cy="8" r="3" fill="#A78BFA"/>
 <path d="M 84 26 Q 100 18 108 8" stroke="#7C3AED" stroke-width="2.5" fill="none" stroke-linecap="round"/>
 <circle cx="108" cy="8" r="3" fill="#A78BFA"/>
-<g class="b">
+<g class="b" id="body">
 <ellipse cx="65" cy="44" rx="24" ry="20" fill="#EDE9FE" stroke="#A78BFA" stroke-width="1.5" opacity="0.8"/>
 <polygon points="65,18 59,30 71,30" fill="#DDD6FE"/>
 <rect x="46" y="32" width="7" height="11" rx="3.5" fill="#DDD6FE"/>
@@ -205,14 +281,13 @@ html,body{background:transparent!important;width:200px;height:262px;overflow:hid
 <circle cx="50" cy="31" r="10" fill="white"/><circle cx="80" cy="31" r="10" fill="white"/>
 <path d="M 40 31 Q 50 22 60 31" fill="#EDE9FE"/>
 <path d="M 70 31 Q 80 22 90 31" fill="#EDE9FE"/>
-<circle cx="51" cy="33" r="5" fill="#5B21B6"/><circle cx="81" cy="33" r="5" fill="#5B21B6"/>
+<circle id="plL" cx="51" cy="33" r="5" fill="#5B21B6"/>
+<circle id="plR" cx="81" cy="33" r="5" fill="#5B21B6"/>
 <circle cx="52" cy="31" r="2" fill="white" opacity="0.6"/><circle cx="82" cy="31" r="2" fill="white" opacity="0.6"/>
 <path d="M 57 54 Q 65 60 73 54" stroke="#7C3AED" stroke-width="2" fill="none" stroke-linecap="round"/>
 <ellipse cx="65" cy="90" rx="20" ry="28" fill="#EDE9FE" stroke="#A78BFA" stroke-width="1" opacity="0.6"/>
 <circle cx="65" cy="90" r="8" fill="none" stroke="#A78BFA" stroke-width="1" opacity="0.4"/>
 <circle cx="65" cy="90" r="4" fill="#C4B5FD" opacity="0.4"/>
-<path d="M 57 82 Q 65 78 73 82" stroke="#A78BFA" stroke-width="1" fill="none" opacity="0.5"/>
-<path d="M 57 98 Q 65 102 73 98" stroke="#A78BFA" stroke-width="1" fill="none" opacity="0.5"/>
 <path d="M 48 80 Q 32 88 28 100" stroke="#A78BFA" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.6"/>
 <path d="M 47 90 Q 30 100 27 112" stroke="#A78BFA" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5"/>
 <path d="M 47 100 Q 32 110 30 122" stroke="#A78BFA" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.4"/>
@@ -232,73 +307,149 @@ html,body{background:transparent!important;width:200px;height:262px;overflow:hid
 <path d="M 120 72 Q 128 64 120 57 Q 112 50 106 60 Q 112 66 118 70" fill="#DDD6FE" stroke="#A78BFA" stroke-width="1"/>
 <path d="M 118 90 Q 126 96 120 103 Q 112 109 104 100 Q 110 95 116 91" fill="#DDD6FE" stroke="#A78BFA" stroke-width="1"/>
 </svg>
-</body></html>
+<script>
+const MSGS=["呼...","🌸","此刻即永恒","随遇而安","无为而无不为","🍃","深呼吸~","...","万物静观皆自得","心如止水"];
+const IDLE=["🌙","静","...","🍃","在","无","🌸","呼～","虚空",""];
+let mi=0,ii=0,bt,cc=0,ct;
+const bub=document.getElementById('bubble');
+const body=document.getElementById('body');
+const plL=document.getElementById('plL');
+const plR=document.getElementById('plR');
+function showBubble(t,d){clearTimeout(bt);bub.textContent=t;bub.classList.add('show');bt=setTimeout(()=>bub.classList.remove('show'),d||2800);}
+function onPetClick(){
+  cc++;clearTimeout(ct);ct=setTimeout(()=>cc=0,800);
+  if(cc>=5){cc=0;body.classList.remove('shk');void body.offsetWidth;body.classList.add('shk');setTimeout(()=>body.classList.remove('shk'),650);showBubble('🌀 心乱了...',2400);return;}
+  body.classList.remove('jmp');void body.offsetWidth;body.classList.add('jmp');
+  showBubble(MSGS[mi++%MSGS.length]);setTimeout(()=>body.classList.remove('jmp'),750);
+}
+function onDragStart(){body.classList.remove('jmp');body.classList.add('drg');showBubble('随风而动～',1400);}
+function onDragEnd(){body.classList.remove('drg');}
+function movePupil(el,bx,by,tx,ty){const dx=tx-bx,dy=ty-by,d=Math.sqrt(dx*dx+dy*dy),R=3,s=d>R?R/d:1;el.setAttribute('cx',bx+dx*s);el.setAttribute('cy',by+dy*s);}
+document.addEventListener('mousemove',function(e){
+  const r=document.querySelector('svg').getBoundingClientRect();
+  const sx=(e.clientX-r.left)/r.width*130,sy=(e.clientY-r.top)/r.height*170;
+  movePupil(plL,51,33,sx,sy);movePupil(plR,81,33,sx,sy);
+});
+(function idle(){setTimeout(function(){const t=IDLE[ii++%IDLE.length];if(t)showBubble(t,2600);idle();},16000+Math.random()*18000);})();
+</script></body></html>
 """#
 
-// ─── 主逻辑 ──────────────────────────────────
+// ── App ───────────────────────────────────────────────────────────────────────
 class MoltyApp: NSObject, NSApplicationDelegate {
     var window: NSWindow!
     var webView: WKWebView!
     var refreshTimer: Timer?
+    var monitors: [Any] = []
+    var tracking = false
+    var hasDragged = false
+    var dragStart: NSPoint = .zero
+    var winStart: NSPoint = .zero
 
     func petHTML(for style: String) -> String {
         switch style {
-        case "cyber":   return cyberHTML
-        case "zen":     return zenHTML
-        default:        return classicHTML
+        case "cyber": return cyberHTML
+        case "zen":   return zenHTML
+        default:      return classicHTML
         }
     }
 
+    func js(_ code: String) {
+        DispatchQueue.main.async { self.webView.evaluateJavaScript(code, completionHandler: nil) }
+    }
+
     func applicationDidFinishLaunching(_ n: Notification) {
-        // 隐藏 Dock 图标和菜单栏
         NSApp.setActivationPolicy(.accessory)
-
         let style = analyzeSoul()
-        let html  = petHTML(for: style)
-
-        // 定位：桌面右下角，避开 Dock
-        let screen = NSScreen.main!.visibleFrame   // visibleFrame 已排除 Dock 和菜单栏
-        let w: CGFloat = 200
-        let h: CGFloat = 270
+        let screen = NSScreen.main!.visibleFrame
+        let w: CGFloat = 200, h: CGFloat = 290
         let x = screen.maxX - w - 24
-        let y = screen.minY + 24                   // 贴近 Dock 上方
+        let y = screen.minY + 24
 
         window = NSWindow(
             contentRect: NSRect(x: x, y: y, width: w, height: h),
-            styleMask:   .borderless,
-            backing:     .buffered,
-            defer:       false
+            styleMask: .borderless, backing: .buffered, defer: false
         )
-        window.isOpaque          = false
-        window.backgroundColor   = .clear
-        window.hasShadow         = false
-        window.level             = .floating
-        window.ignoresMouseEvents = true          // 点击穿透，不影响使用
+        window.isOpaque = false
+        window.backgroundColor = .clear
+        window.hasShadow = false
+        window.level = .floating
+        window.ignoresMouseEvents = true  // default: click-through
         window.collectionBehavior = [.canJoinAllSpaces, .stationary, .ignoresCycle]
 
         let cfg = WKWebViewConfiguration()
         webView = WKWebView(frame: NSRect(x: 0, y: 0, width: w, height: h), configuration: cfg)
-        webView.setValue(false, forKey: "drawsBackground")  // WebKit 透明背景
-        webView.loadHTMLString(html, baseURL: nil)
-
+        webView.setValue(false, forKey: "drawsBackground")
+        webView.loadHTMLString(petHTML(for: style), baseURL: nil)
         window.contentView = webView
         window.orderFront(nil)
 
-        // 每 10 分钟重新读取 soul.md，风格可能变化
+        setupMonitors()
+
         refreshTimer = Timer.scheduledTimer(withTimeInterval: 600, repeats: true) { [weak self] _ in
             guard let self = self else { return }
-            let newStyle = analyzeSoul()
-            let newHTML  = self.petHTML(for: newStyle)
-            DispatchQueue.main.async { self.webView.loadHTMLString(newHTML, baseURL: nil) }
+            let html = self.petHTML(for: analyzeSoul())
+            DispatchQueue.main.async { self.webView.loadHTMLString(html, baseURL: nil) }
         }
+    }
+
+    func setupMonitors() {
+        // Toggle click-through based on mouse position
+        if let m = NSEvent.addGlobalMonitorForEvents(matching: .mouseMoved, handler: { [weak self] _ in
+            guard let self = self, !self.tracking else { return }
+            DispatchQueue.main.async {
+                self.window.ignoresMouseEvents = !self.window.frame.contains(NSEvent.mouseLocation)
+            }
+        }) { monitors.append(m) }
+
+        // Detect drag start
+        if let m = NSEvent.addGlobalMonitorForEvents(matching: .leftMouseDown, handler: { [weak self] _ in
+            guard let self = self else { return }
+            let pos = NSEvent.mouseLocation
+            guard self.window.frame.contains(pos) else { return }
+            self.tracking = true
+            self.hasDragged = false
+            self.dragStart = pos
+            self.winStart = self.window.frame.origin
+        }) { monitors.append(m) }
+
+        // Handle drag movement
+        if let m = NSEvent.addGlobalMonitorForEvents(matching: .leftMouseDragged, handler: { [weak self] _ in
+            guard let self = self, self.tracking else { return }
+            let pos = NSEvent.mouseLocation
+            let dx = pos.x - self.dragStart.x
+            let dy = pos.y - self.dragStart.y
+            guard abs(dx) > 3 || abs(dy) > 3 else { return }
+            if !self.hasDragged {
+                self.hasDragged = true
+                self.js("typeof onDragStart==='function'&&onDragStart()")
+            }
+            DispatchQueue.main.async {
+                self.window.setFrameOrigin(NSPoint(x: self.winStart.x + dx, y: self.winStart.y + dy))
+            }
+        }) { monitors.append(m) }
+
+        // Handle click or drag end
+        if let m = NSEvent.addGlobalMonitorForEvents(matching: .leftMouseUp, handler: { [weak self] _ in
+            guard let self = self, self.tracking else { return }
+            defer { self.tracking = false; self.hasDragged = false }
+            if !self.hasDragged {
+                self.js("typeof onPetClick==='function'&&onPetClick()")
+                DispatchQueue.main.async {
+                    NSWorkspace.shared.open(URL(string: "http://127.0.0.1:18789/")!)
+                }
+            } else {
+                self.js("typeof onDragEnd==='function'&&onDragEnd()")
+            }
+        }) { monitors.append(m) }
     }
 
     func applicationWillTerminate(_ n: Notification) {
         refreshTimer?.invalidate()
+        monitors.forEach { NSEvent.removeMonitor($0) }
     }
 }
 
-let app      = NSApplication.shared
+let app = NSApplication.shared
 let delegate = MoltyApp()
 app.delegate = delegate
 app.run()
