@@ -634,9 +634,6 @@ pkill -f "Molty.app" 2>/dev/null || true
 launchctl load "$AGENT_PLIST"
 echo -e "  ${GRN}✓${NC} LaunchAgent 已注册（开机自动启动）"
 
-sleep 0.5
-open "$APP_DIR"
-
 echo ""
 echo "  ─────────────────────────────────"
 echo -e "  ${CYN}${BLD}🦞  ${PREVIEW} 已出现在桌面右下角！${NC}"
