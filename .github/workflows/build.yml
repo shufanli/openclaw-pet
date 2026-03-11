@@ -1,0 +1,58 @@
+name: Build & Release Molty
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build universal binary
+        run: |
+          mkdir -p dist
+
+          # arm64 (Apple Silicon)
+          swiftc -framework WebKit -O \
+            -target arm64-apple-macos12 \
+            -o dist/molty-arm64 \
+            molty.swift
+
+          # x86_64 (Intel)
+          swiftc -framework WebKit -O \
+            -target x86_64-apple-macos12 \
+            -o dist/molty-x86_64 \
+            molty.swift
+
+          # Universal binary
+          lipo -create dist/molty-arm64 dist/molty-x86_64 -output dist/molty
+          chmod +x dist/molty
+
+          echo "=== Binary info ==="
+          file dist/molty
+          du -sh dist/molty
+
+      - name: Upload artifact (for workflow_dispatch)
+        uses: actions/upload-artifact@v4
+        with:
+          name: molty-universal
+          path: dist/molty
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/molty
+          body: |
+            🦞 Molty Desktop Pet — universal macOS binary (arm64 + x86_64)
+
+            Install with one command:
+            ```bash
+            curl -fsSL https://raw.githubusercontent.com/shufanli/openclaw-pet/main/install-molty.sh | bash
+            ```
