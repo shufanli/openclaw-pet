@@ -42,13 +42,13 @@ fi
 
 # ── 2. 性格分析 ───────────────────────────────
 c=0; cy=0; z=0
-for w in social friend fun happy creative energetic art music humor laugh; do
+for w in social friend fun happy creative energetic art music humor laugh 社交 朋友 快乐 开心 创意 活力 艺术 音乐 幽默 搞笑 欢乐 热情; do
     [[ "$SOUL" == *"$w"* ]] && ((c+=2)) || true
 done
-for w in code hack terminal engineer debug algorithm tech script api git data optimize; do
+for w in code hack terminal engineer debug algorithm tech script api git data optimize 代码 技术 工程师 调试 算法 编程 脚本 数据 优化 极客 开发 程序; do
     [[ "$SOUL" == *"$w"* ]] && ((cy+=2)) || true
 done
-for w in calm peace balance mindful wisdom deep slow patient meditate philosophy reflect; do
+for w in calm peace balance mindful wisdom deep slow patient meditate philosophy reflect 平静 平和 平衡 正念 智慧 深度 耐心 冥想 哲学 反思 禅 宁静; do
     [[ "$SOUL" == *"$w"* ]] && ((z+=2)) || true
 done
 if   [ "$cy" -ge "$c" ] && [ "$cy" -ge "$z" ]; then PREVIEW="赛博 Molty ⚡"
@@ -123,9 +123,9 @@ func analyzeSoul() -> String {
         if let s = try? String(contentsOfFile: p, encoding: .utf8) { soul = s.lowercased(); break }
     }
     var c = 0, cy = 0, z = 0
-    for w in ["social","friend","fun","happy","creative","energetic","art","music","humor","laugh","outgoing"] { if soul.contains(w) { c += 2 } }
-    for w in ["code","hack","terminal","engineer","debug","algorithm","tech","script","api","git","data","optimize","coder"] { if soul.contains(w) { cy += 2 } }
-    for w in ["calm","peace","balance","mindful","wisdom","deep","slow","patient","meditate","philosophy","reflect","quiet"] { if soul.contains(w) { z += 2 } }
+    for w in ["social","friend","fun","happy","creative","energetic","art","music","humor","laugh","outgoing","社交","朋友","快乐","开心","创意","活力","艺术","音乐","幽默","搞笑","欢乐","热情"] { if soul.contains(w) { c += 2 } }
+    for w in ["code","hack","terminal","engineer","debug","algorithm","tech","script","api","git","data","optimize","coder","代码","技术","工程师","调试","算法","编程","脚本","数据","优化","极客","开发","程序"] { if soul.contains(w) { cy += 2 } }
+    for w in ["calm","peace","balance","mindful","wisdom","deep","slow","patient","meditate","philosophy","reflect","quiet","平静","平和","平衡","正念","智慧","深度","耐心","冥想","哲学","反思","禅","宁静"] { if soul.contains(w) { z += 2 } }
     if cy >= c && cy >= z { return "cyber" }
     if z  >= c && z  >= cy { return "zen"   }
     return "classic"
