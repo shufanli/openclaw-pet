@@ -28,7 +28,7 @@ func analyzeSoul() -> String {
 let classicHTML = #"""
 <!DOCTYPE html><html><head><meta charset="UTF-8"><style>
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{background:transparent!important;width:200px;height:290px;overflow:hidden;-webkit-user-select:none;font-family:-apple-system,sans-serif}
+html{background:transparent!important;width:100px;height:145px;overflow:hidden}body{background:transparent!important;width:200px;height:290px;overflow:hidden;-webkit-user-select:none;font-family:-apple-system,sans-serif;transform:scale(.5);transform-origin:top left}
 @keyframes B{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
 @keyframes WL{0%,100%{transform:rotate(0);transform-origin:80% 80%}40%{transform:rotate(-28deg);transform-origin:80% 80%}}
 @keyframes WR{0%,100%{transform:rotate(0);transform-origin:20% 80%}40%{transform:rotate(28deg);transform-origin:20% 80%}}
@@ -38,6 +38,7 @@ html,body{background:transparent!important;width:200px;height:290px;overflow:hid
 @keyframes JMP{0%{transform:translateY(0) scale(1)}20%{transform:translateY(-30px) scale(1.08) rotate(-6deg)}60%{transform:translateY(-18px) scale(0.95) rotate(4deg)}85%{transform:translateY(-3px) rotate(-1deg)}100%{transform:translateY(0) scale(1) rotate(0)}}
 @keyframes SHK{0%,100%{transform:translateX(0) rotate(0)}15%{transform:translateX(-9px) rotate(-6deg)}35%{transform:translateX(9px) rotate(6deg)}55%{transform:translateX(-6px) rotate(-4deg)}75%{transform:translateX(6px) rotate(4deg)}}
 @keyframes DRG{0%,100%{transform:rotate(-4deg) scale(1.05)}50%{transform:rotate(4deg) scale(1.05)}}
+@keyframes SPIN{0%{transform:scale(1) rotate(0)}40%{transform:scale(1.2) rotate(200deg) translateY(-20px)}100%{transform:scale(1) rotate(360deg)}}
 .b{animation:B 2s ease-in-out infinite;cursor:grab}
 .cl{animation:WL 3s ease-in-out infinite .5s}.cr{animation:WR 3s ease-in-out infinite}
 .ey{animation:BLK 4s ease-in-out infinite}.al{animation:AL 2.5s ease-in-out infinite}.ar{animation:AR 2.5s ease-in-out infinite .3s}
@@ -45,6 +46,7 @@ html,body{background:transparent!important;width:200px;height:290px;overflow:hid
 .b.jmp{animation:B 2s ease-in-out infinite,JMP 0.6s ease-out!important}
 .b.shk{animation:SHK 0.55s ease-in-out!important}
 .b.drg{animation:DRG 0.35s ease-in-out infinite!important;cursor:grabbing}
+.b.spin{animation:SPIN 0.65s cubic-bezier(.36,.07,.19,.97) forwards!important;cursor:wait}
 .bubble{position:absolute;top:3px;left:50%;transform:translateX(-50%) scale(0.8) translateY(5px);background:#fff;border:2.5px solid #E8433A;border-radius:16px;padding:5px 14px;font-size:12px;font-weight:700;color:#C0392B;white-space:nowrap;opacity:0;transition:all 0.22s cubic-bezier(.34,1.56,.64,1);pointer-events:none;z-index:10;box-shadow:0 4px 16px rgba(232,67,58,0.18)}
 .bubble.show{opacity:1;transform:translateX(-50%) scale(1) translateY(0)}
 .bubble::after{content:'';position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);border:4px solid transparent;border-top-color:#E8433A}
@@ -115,6 +117,7 @@ function onPetClick(){
 }
 function onDragStart(){body.classList.remove('jmp');body.classList.add('drg');showBubble('woah～🌀',1200);}
 function onDragEnd(){body.classList.remove('drg');}
+function onSkinSwitch(next){body.classList.remove('jmp','shk','drg');void body.offsetWidth;body.classList.add('spin');showBubble('✨ '+next,900);}
 function movePupil(el,bx,by,tx,ty){const dx=tx-bx,dy=ty-by,d=Math.sqrt(dx*dx+dy*dy),R=4,s=d>R?R/d:1;el.setAttribute('cx',bx+dx*s);el.setAttribute('cy',by+dy*s);}
 document.addEventListener('mousemove',function(e){
   const r=document.querySelector('svg').getBoundingClientRect();
@@ -129,7 +132,7 @@ document.addEventListener('mousemove',function(e){
 let cyberHTML = #"""
 <!DOCTYPE html><html><head><meta charset="UTF-8"><style>
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{background:transparent!important;width:200px;height:290px;overflow:hidden;-webkit-user-select:none;font-family:monospace}
+html{background:transparent!important;width:100px;height:145px;overflow:hidden}body{background:transparent!important;width:200px;height:290px;overflow:hidden;-webkit-user-select:none;font-family:monospace;transform:scale(.5);transform-origin:top left}
 @keyframes F{0%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-6px) rotate(-1deg)}75%{transform:translateY(-4px) rotate(1deg)}}
 @keyframes GW{0%,100%{filter:drop-shadow(0 0 8px #00FFCC) drop-shadow(0 0 20px rgba(0,255,204,.4))}50%{filter:drop-shadow(0 0 16px #00FFCC) drop-shadow(0 0 44px rgba(0,255,204,.7))}}
 @keyframes ES{0%,100%{fill:#00FFCC}50%{fill:#FF2D78}}
@@ -138,6 +141,7 @@ html,body{background:transparent!important;width:200px;height:290px;overflow:hid
 @keyframes JMP{0%{transform:translateY(0) scale(1)}20%{transform:translateY(-28px) scale(1.06) rotate(-4deg)}60%{transform:translateY(-16px) scale(0.96) rotate(3deg)}85%{transform:translateY(-2px)}100%{transform:translateY(0) scale(1) rotate(0)}}
 @keyframes SHK{0%,100%{transform:translateX(0)}15%{transform:translateX(-8px)}35%{transform:translateX(8px)}55%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
 @keyframes DRG{0%,100%{transform:rotate(-3deg) scale(1.04)}50%{transform:rotate(3deg) scale(1.06)}}
+@keyframes SPIN{0%{transform:scale(1) rotate(0)}40%{transform:scale(1.2) rotate(200deg) translateY(-20px)}100%{transform:scale(1) rotate(360deg)}}
 @keyframes SCAN{0%{transform:translateY(-100%)}100%{transform:translateY(400%)}}
 .b{animation:F 3s ease-in-out infinite,GL 8s ease-in-out infinite;cursor:grab}
 .gw{animation:GW 2s ease-in-out infinite}.ey{animation:ES 3s ease-in-out infinite}
@@ -146,6 +150,7 @@ html,body{background:transparent!important;width:200px;height:290px;overflow:hid
 .b.jmp{animation:F 3s ease-in-out infinite,JMP 0.55s ease-out!important}
 .b.shk{animation:SHK 0.5s ease-in-out!important}
 .b.drg{animation:DRG 0.3s ease-in-out infinite!important;cursor:grabbing}
+.b.spin{animation:SPIN 0.65s cubic-bezier(.36,.07,.19,.97) forwards!important;cursor:wait}
 .bubble{position:absolute;top:3px;left:50%;transform:translateX(-50%) scale(0.85) translateY(4px);background:#0D1A14;border:1px solid #00FFCC;border-radius:4px;padding:5px 14px;font-size:11px;color:#00FFCC;white-space:nowrap;opacity:0;transition:all 0.15s ease;pointer-events:none;z-index:10;box-shadow:0 0 14px rgba(0,255,204,0.35);text-shadow:0 0 8px #00FFCC;letter-spacing:0.05em}
 .bubble::before{content:'> ';opacity:0.6}
 .bubble.show{opacity:1;transform:translateX(-50%) scale(1) translateY(0)}
@@ -225,6 +230,7 @@ function onPetClick(){
 }
 function onDragStart(){body.classList.remove('jmp');body.classList.add('drg');showBubble('DRAG EVENT FIRED',1000);}
 function onDragEnd(){body.classList.remove('drg');}
+function onSkinSwitch(next){body.classList.remove('jmp','shk','drg');void body.offsetWidth;body.classList.add('spin');showBubble('> '+next,900);}
 function movePupil(el,bx,by,tx,ty){const dx=tx-bx,dy=ty-by,d=Math.sqrt(dx*dx+dy*dy),R=4,s=d>R?R/d:1;el.setAttribute('cx',bx+dx*s);el.setAttribute('cy',by+dy*s);}
 document.addEventListener('mousemove',function(e){
   const r=document.querySelector('svg').getBoundingClientRect();
@@ -239,7 +245,7 @@ document.addEventListener('mousemove',function(e){
 let zenHTML = #"""
 <!DOCTYPE html><html><head><meta charset="UTF-8"><style>
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{background:transparent!important;width:200px;height:290px;overflow:hidden;-webkit-user-select:none;font-family:-apple-system,sans-serif}
+html{background:transparent!important;width:100px;height:145px;overflow:hidden}body{background:transparent!important;width:200px;height:290px;overflow:hidden;-webkit-user-select:none;font-family:-apple-system,sans-serif;transform:scale(.5);transform-origin:top left}
 @keyframes ZF{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-14px) scale(1.02)}}
 @keyframes AU{0%,100%{transform:scale(1);opacity:.3}50%{transform:scale(1.45);opacity:.08}}
 @keyframes BR{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.15);opacity:1}}
@@ -249,6 +255,7 @@ html,body{background:transparent!important;width:200px;height:290px;overflow:hid
 @keyframes JMP{0%{transform:translateY(0) scale(1)}25%{transform:translateY(-20px) scale(1.05)}60%{transform:translateY(-12px) scale(0.97)}85%{transform:translateY(-2px)}100%{transform:translateY(0) scale(1)}}
 @keyframes SHK{0%,100%{transform:rotate(0)}20%{transform:rotate(-5deg)}40%{transform:rotate(5deg)}60%{transform:rotate(-3deg)}80%{transform:rotate(3deg)}}
 @keyframes DRG{0%,100%{transform:rotate(-2deg) scale(1.03)}50%{transform:rotate(2deg) scale(1.03)}}
+@keyframes SPIN{0%{transform:scale(1) rotate(0)}40%{transform:scale(1.15) rotate(200deg) translateY(-16px)}100%{transform:scale(1) rotate(360deg)}}
 .b{animation:ZF 4s ease-in-out infinite;cursor:grab}
 .au{animation:AU 4s ease-in-out infinite}.br{animation:BR 4s ease-in-out infinite}
 .s1{animation:S1 3s ease-out infinite}.s2{animation:S2 3s ease-out infinite 1s}.s3{animation:S3 3s ease-out infinite 2s}
@@ -256,6 +263,7 @@ html,body{background:transparent!important;width:200px;height:290px;overflow:hid
 .b.jmp{animation:ZF 4s ease-in-out infinite,JMP 0.7s ease-out!important}
 .b.shk{animation:SHK 0.6s ease-in-out!important}
 .b.drg{animation:DRG 0.45s ease-in-out infinite!important;cursor:grabbing}
+.b.spin{animation:SPIN 0.65s cubic-bezier(.36,.07,.19,.97) forwards!important;cursor:wait}
 .bubble{position:absolute;top:3px;left:50%;transform:translateX(-50%) scale(0.85) translateY(5px);background:rgba(237,233,254,0.94);border:1.5px solid #A78BFA;border-radius:20px;padding:6px 16px;font-size:12px;color:#5B21B6;white-space:nowrap;opacity:0;transition:all 0.35s cubic-bezier(.34,1.56,.64,1);pointer-events:none;z-index:10;backdrop-filter:blur(8px);box-shadow:0 4px 20px rgba(167,139,250,0.2)}
 .bubble.show{opacity:1;transform:translateX(-50%) scale(1) translateY(0)}
 .bubble::after{content:'';position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);border:4px solid transparent;border-top-color:#A78BFA}
@@ -324,6 +332,7 @@ function onPetClick(){
 }
 function onDragStart(){body.classList.remove('jmp');body.classList.add('drg');showBubble('随风而动～',1400);}
 function onDragEnd(){body.classList.remove('drg');}
+function onSkinSwitch(next){body.classList.remove('jmp','shk','drg');void body.offsetWidth;body.classList.add('spin');showBubble('🌸 '+next,900);}
 function movePupil(el,bx,by,tx,ty){const dx=tx-bx,dy=ty-by,d=Math.sqrt(dx*dx+dy*dy),R=3,s=d>R?R/d:1;el.setAttribute('cx',bx+dx*s);el.setAttribute('cy',by+dy*s);}
 document.addEventListener('mousemove',function(e){
   const r=document.querySelector('svg').getBoundingClientRect();
@@ -344,6 +353,9 @@ class MoltyApp: NSObject, NSApplicationDelegate {
     var hasDragged = false
     var dragStart: NSPoint = .zero
     var winStart: NSPoint = .zero
+    let skinOrder = ["classic", "cyber", "zen"]
+    let skinNames  = ["classic": "⚡ 赛博 Molty", "cyber": "✦ 禅意 Molty", "zen": "🦞 经典 Molty"]
+    var currentSkin = "classic"
 
     func petHTML(for style: String) -> String {
         switch style {
@@ -353,15 +365,20 @@ class MoltyApp: NSObject, NSApplicationDelegate {
         }
     }
 
+    func nextSkin() -> String {
+        let idx = (skinOrder.firstIndex(of: currentSkin) ?? 0) + 1
+        return skinOrder[idx % skinOrder.count]
+    }
+
     func js(_ code: String) {
         DispatchQueue.main.async { self.webView.evaluateJavaScript(code, completionHandler: nil) }
     }
 
     func applicationDidFinishLaunching(_ n: Notification) {
         NSApp.setActivationPolicy(.accessory)
-        let style = analyzeSoul()
+        currentSkin = analyzeSoul()
         let screen = NSScreen.main!.visibleFrame
-        let w: CGFloat = 200, h: CGFloat = 290
+        let w: CGFloat = 100, h: CGFloat = 145
         let x = screen.maxX - w - 24
         let y = screen.minY + 24
 
@@ -379,7 +396,7 @@ class MoltyApp: NSObject, NSApplicationDelegate {
         let cfg = WKWebViewConfiguration()
         webView = WKWebView(frame: NSRect(x: 0, y: 0, width: w, height: h), configuration: cfg)
         webView.setValue(false, forKey: "drawsBackground")
-        webView.loadHTMLString(petHTML(for: style), baseURL: nil)
+        webView.loadHTMLString(petHTML(for: currentSkin), baseURL: nil)
         window.contentView = webView
         window.orderFront(nil)
 
@@ -387,7 +404,8 @@ class MoltyApp: NSObject, NSApplicationDelegate {
 
         refreshTimer = Timer.scheduledTimer(withTimeInterval: 600, repeats: true) { [weak self] _ in
             guard let self = self else { return }
-            let html = self.petHTML(for: analyzeSoul())
+            self.currentSkin = analyzeSoul()
+            let html = self.petHTML(for: self.currentSkin)
             DispatchQueue.main.async { self.webView.loadHTMLString(html, baseURL: nil) }
         }
     }
@@ -439,6 +457,19 @@ class MoltyApp: NSObject, NSApplicationDelegate {
                 }
             } else {
                 self.js("typeof onDragEnd==='function'&&onDragEnd()")
+            }
+        }) { monitors.append(m) }
+
+        // Right-click: cycle through skins
+        if let m = NSEvent.addGlobalMonitorForEvents(matching: .rightMouseDown, handler: { [weak self] _ in
+            guard let self = self else { return }
+            guard self.window.frame.contains(NSEvent.mouseLocation) else { return }
+            let next = self.nextSkin()
+            let displayName = self.skinNames[next] ?? next
+            self.js("typeof onSkinSwitch==='function'&&onSkinSwitch('\(displayName)')")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.65) {
+                self.currentSkin = next
+                self.webView.loadHTMLString(self.petHTML(for: next), baseURL: nil)
             }
         }) { monitors.append(m) }
     }
