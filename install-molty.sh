@@ -452,7 +452,7 @@ document.addEventListener('mousemove',function(e){
 """#
 
 // ── App ───────────────────────────────────────────────────────────────────────
-class MoltyApp: NSObject, NSApplicationDelegate {
+class MoltyApp: NSObject, NSApplicationDelegate, WKNavigationDelegate {
     var window: NSWindow!
     var webView: WKWebView!
     var refreshTimer: Timer?
@@ -504,6 +504,7 @@ class MoltyApp: NSObject, NSApplicationDelegate {
         let cfg = WKWebViewConfiguration()
         webView = WKWebView(frame: NSRect(x: 0, y: 0, width: w, height: h), configuration: cfg)
         webView.setValue(false, forKey: "drawsBackground")
+        webView.navigationDelegate = self
         webView.loadHTMLString(petHTML(for: currentSkin), baseURL: nil)
         window.contentView = webView
         window.orderFront(nil)
@@ -568,6 +569,12 @@ class MoltyApp: NSObject, NSApplicationDelegate {
             }
         }) { monitors.append(m) }
 
+        // Consume right-click locally so WKWebView never sees it (prevents native context menu)
+        if let m = NSEvent.addLocalMonitorForEvents(matching: .rightMouseDown, handler: { [weak self] event in
+            guard let self = self else { return event }
+            return self.window.frame.contains(NSEvent.mouseLocation) ? nil : event
+        }) { monitors.append(m) }
+
         // Right-click: cycle through skins
         if let m = NSEvent.addGlobalMonitorForEvents(matching: .rightMouseDown, handler: { [weak self] _ in
             guard let self = self else { return }
@@ -580,6 +587,11 @@ class MoltyApp: NSObject, NSApplicationDelegate {
                 self.webView.loadHTMLString(self.petHTML(for: next), baseURL: nil)
             }
         }) { monitors.append(m) }
+    }
+
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        webView.setValue(false, forKey: "drawsBackground")
+        window.orderFront(nil)
     }
 
     func applicationWillTerminate(_ n: Notification) {
