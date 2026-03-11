@@ -68,7 +68,7 @@ get_binary() {
     echo -e "  ${CYN}⬇  下载预编译二进制...${NC}"
     local release_url
     release_url=$(curl -fsSL "https://api.github.com/repos/$REPO/releases/latest" \
-        2>/dev/null | grep '"browser_download_url"' | grep '"molty"' | cut -d'"' -f4 | head -1)
+        2>/dev/null | grep '"browser_download_url"' | grep 'molty' | cut -d'"' -f4 | head -1)
 
     if [ -n "$release_url" ]; then
         if curl -fsSL "$release_url" -o "$dest" 2>/dev/null; then
