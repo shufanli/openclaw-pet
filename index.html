@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenClaw 龙虾桌面萌宠 · Molty Desktop Pet</title>
+  <style>
+    :root {
+      --bg: #080812;
+      --card: #10101E;
+      --border: #1A1A30;
+      --subtle: #141426;
+      --red: #E8433A;
+      --text: #F0F0FA;
+      --muted: #5A5A88;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      min-height: 100vh; overflow-x: hidden;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: sticky; top: 0; z-index: 50;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 48px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(8,8,18,0.85);
+      backdrop-filter: blur(24px);
+    }
+    .logo { display: flex; align-items: center; gap: 11px; }
+    .logo-icon { width: 34px; height: 34px; }
+    .logo-name { font-size: 16px; font-weight: 700; }
+    .logo-name span { color: var(--red); }
+    nav { display: flex; gap: 28px; }
+    nav a { font-size: 14px; color: var(--muted); text-decoration: none; transition: color .2s; }
+    nav a:hover { color: var(--text); }
+    .badge { font-size: 11px; font-weight: 600; letter-spacing: 1px; color: var(--muted); text-transform: uppercase; }
+    @media (max-width: 700px) { header { padding: 14px 20px; } nav { display: none; } }
+
+    /* ── HERO ── */
+    .hero {
+      text-align: center; padding: 88px 24px 64px;
+      position: relative; overflow: hidden;
+    }
+    .hero-glow {
+      position: absolute; pointer-events: none;
+      width: 700px; height: 500px;
+      background: radial-gradient(ellipse, rgba(232,67,58,0.1) 0%, transparent 70%);
+      top: -80px; left: 50%; transform: translateX(-50%);
+    }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+      color: var(--red); background: rgba(232,67,58,0.1); border: 1px solid rgba(232,67,58,0.3);
+      padding: 6px 14px; border-radius: 100px; margin-bottom: 32px;
+    }
+    h1 {
+      font-size: clamp(36px, 6vw, 70px); font-weight: 800; letter-spacing: -2px;
+      line-height: 1.04; margin-bottom: 22px;
+      background: linear-gradient(180deg, #fff 0%, rgba(240,240,250,0.55) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, #E8433A, #FF7070);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-sub { font-size: 18px; color: var(--muted); line-height: 1.65; max-width: 500px; margin: 0 auto 44px; }
+    .cta-row { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; }
+    .btn-red {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--red); color: #fff; font-size: 16px; font-weight: 700;
+      padding: 14px 30px; border-radius: 12px; border: none; cursor: pointer;
+      transition: all .2s; box-shadow: 0 0 40px rgba(232,67,58,0.28);
+      text-decoration: none;
+    }
+    .btn-red:hover { transform: translateY(-2px); box-shadow: 0 0 60px rgba(232,67,58,0.5); }
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: transparent; color: var(--muted); font-size: 14px; font-weight: 600;
+      padding: 13px 22px; border-radius: 12px; border: 1px solid var(--border);
+      cursor: pointer; transition: all .2s; text-decoration: none;
+    }
+    .btn-ghost:hover { color: var(--text); border-color: var(--muted); }
+
+    /* ── INSTALL STEPS ── */
+    .steps-section {
+      max-width: 820px; margin: 0 auto 88px; padding: 0 24px;
+    }
+    .section-title {
+      text-align: center; margin-bottom: 44px;
+    }
+    .section-title h2 { font-size: 30px; font-weight: 800; letter-spacing: -0.8px; margin-bottom: 8px; }
+    .section-title p { font-size: 15px; color: var(--muted); }
+
+    .steps-track {
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;
+      position: relative;
+    }
+    .steps-track::before {
+      content: '';
+      position: absolute; top: 28px; left: 15%; right: 15%; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border) 20%, var(--border) 80%, transparent);
+    }
+    @media (max-width: 600px) {
+      .steps-track { grid-template-columns: 1fr; }
+      .steps-track::before { display: none; }
+    }
+    .step-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 18px;
+      padding: 28px 22px; text-align: center; position: relative;
+      transition: border-color .2s;
+    }
+    .step-card:hover { border-color: rgba(232,67,58,0.4); }
+    .step-num {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: rgba(232,67,58,0.12); border: 1px solid rgba(232,67,58,0.35);
+      color: var(--red); font-size: 16px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px;
+    }
+    .step-emoji { font-size: 28px; margin-bottom: 12px; }
+    .step-title { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+    .step-desc { font-size: 13px; color: var(--muted); line-height: 1.55; }
+    .step-link {
+      display: inline-block; margin-top: 10px;
+      font-size: 12px; color: var(--red); text-decoration: none;
+      border-bottom: 1px solid rgba(232,67,58,0.3);
+      transition: border-color .2s;
+    }
+    .step-link:hover { border-color: var(--red); }
+
+    /* Terminal snippet */
+    .terminal-snippet {
+      margin: 40px auto 0; max-width: 480px;
+      background: #0D0D18; border: 1px solid var(--border); border-radius: 14px;
+      overflow: hidden;
+    }
+    .term-bar {
+      display: flex; align-items: center; gap: 7px;
+      padding: 11px 16px; background: #141420; border-bottom: 1px solid var(--border);
+    }
+    .dot { width: 11px; height: 11px; border-radius: 50%; }
+    .dot.r { background: #FF5F57; } .dot.y { background: #FEBC2E; } .dot.g { background: #28C840; }
+    .term-label { font-size: 12px; color: var(--muted); margin-left: 6px; }
+    .term-body { padding: 18px 20px; }
+    .term-line { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px; }
+    .term-line:last-child { margin-bottom: 0; }
+    .prompt { color: var(--red); user-select: none; }
+    .cmd { color: #E0E0F0; }
+    .term-out { color: #4CAF50; }
+    .copy-btn {
+      float: right; margin-top: -2px;
+      background: var(--subtle); border: 1px solid var(--border);
+      color: var(--muted); font-size: 11px; font-weight: 600;
+      padding: 4px 10px; border-radius: 6px; cursor: pointer;
+      transition: all .2s;
+    }
+    .copy-btn:hover { color: var(--text); }
+
+    /* ── PETS GRID ── */
+    .pets-section {
+      max-width: 1100px; margin: 0 auto 88px; padding: 0 24px;
+    }
+    .pets-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
+    }
+    @media (max-width: 768px) { .pets-grid { grid-template-columns: 1fr; } }
+
+    .pet-card {
+      background: var(--card); border: 2px solid var(--border);
+      border-radius: 22px; padding: 30px 22px 26px;
+      display: flex; flex-direction: column; align-items: center;
+      cursor: pointer; transition: all .3s cubic-bezier(0.34,1.56,0.64,1);
+      position: relative; overflow: hidden;
+    }
+    .pet-card:hover { transform: translateY(-6px); }
+    .pet-card.active { border-color: var(--pc); box-shadow: 0 0 0 1px var(--pc), 0 20px 60px -10px var(--ps); }
+    .card-classic { --pc: #E8433A; --ps: rgba(232,67,58,0.28); }
+    .card-cyber   { --pc: #00FFCC; --ps: rgba(0,255,204,0.18); }
+    .card-zen     { --pc: #A78BFA; --ps: rgba(167,139,250,0.22); }
+
+    .pet-glow {
+      position: absolute; inset: 0; pointer-events: none;
+      background: radial-gradient(ellipse at 50% 0%, var(--pg, rgba(232,67,58,0.09)) 0%, transparent 70%);
+      opacity: 0; transition: opacity .3s;
+    }
+    .card-classic { --pg: rgba(232,67,58,0.09); }
+    .card-cyber   { --pg: rgba(0,255,204,0.07); }
+    .card-zen     { --pg: rgba(167,139,250,0.09); }
+    .pet-card:hover .pet-glow, .pet-card.active .pet-glow { opacity: 1; }
+
+    .pet-stage { width: 160px; height: 185px; display: flex; align-items: center; justify-content: center; margin-bottom: 22px; }
+    .pet-name { font-size: 20px; font-weight: 800; letter-spacing: -0.4px; margin-bottom: 5px; }
+    .pet-sub { font-size: 12px; color: var(--muted); margin-bottom: 15px; text-align: center; }
+    .pet-tags { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 22px; }
+    .tag {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.3px;
+      padding: 4px 10px; border-radius: 100px; border: 1px solid currentColor; opacity: 0.65;
+    }
+    .card-classic .tag { color: #E8433A; }
+    .card-cyber .tag   { color: #00FFCC; }
+    .card-zen .tag     { color: #A78BFA; }
+    .pet-btn {
+      width: 100%; padding: 11px; border-radius: 11px;
+      border: 1.5px solid var(--pc); background: transparent; color: var(--pc);
+      font-size: 14px; font-weight: 700; cursor: pointer; transition: all .2s;
+    }
+    .pet-btn:hover, .pet-card.active .pet-btn { background: var(--pc); color: #080812; }
+    .recommended-badge {
+      position: absolute; top: 14px; right: 14px;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
+      color: var(--pc); background: rgba(255,255,255,0.05);
+      padding: 3px 9px; border-radius: 100px; display: none;
+    }
+    .pet-card.active .recommended-badge { display: block; }
+
+    /* ── ANIMATIONS: CLASSIC ── */
+    @keyframes cl-bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+    @keyframes cl-wl { 0%,100%{transform:rotate(0);transform-origin:80% 80%} 40%{transform:rotate(-28deg);transform-origin:80% 80%} }
+    @keyframes cl-wr { 0%,100%{transform:rotate(0);transform-origin:20% 80%} 40%{transform:rotate(28deg);transform-origin:20% 80%} }
+    @keyframes cl-blink { 0%,88%,100%{transform:scaleY(1)} 93%{transform:scaleY(0.08)} }
+    @keyframes cl-al { 0%,100%{transform:rotate(0);transform-origin:70% 100%} 50%{transform:rotate(-8deg);transform-origin:70% 100%} }
+    @keyframes cl-ar { 0%,100%{transform:rotate(0);transform-origin:30% 100%} 50%{transform:rotate(8deg);transform-origin:30% 100%} }
+    .cl-body { animation: cl-bounce 2s ease-in-out infinite; }
+    .cl-claw-l { animation: cl-wl 3s ease-in-out infinite .5s; }
+    .cl-claw-r { animation: cl-wr 3s ease-in-out infinite; }
+    .cl-eye { animation: cl-blink 4s ease-in-out infinite; }
+    .cl-al { animation: cl-al 2.5s ease-in-out infinite; }
+    .cl-ar { animation: cl-ar 2.5s ease-in-out infinite .3s; }
+
+    /* ── ANIMATIONS: CYBER ── */
+    @keyframes cy-float { 0%,100%{transform:translateY(0) rotate(0)} 25%{transform:translateY(-6px) rotate(-1deg)} 75%{transform:translateY(-4px) rotate(1deg)} }
+    @keyframes cy-glow { 0%,100%{filter:drop-shadow(0 0 8px #00FFCC) drop-shadow(0 0 20px rgba(0,255,204,.4))} 50%{filter:drop-shadow(0 0 16px #00FFCC) drop-shadow(0 0 44px rgba(0,255,204,.7))} }
+    @keyframes cy-eye { 0%,100%{fill:#00FFCC} 50%{fill:#FF2D78} }
+    @keyframes cy-glitch { 0%,88%,100%{transform:translate(0)} 90%{transform:translate(-2px,1px)} 94%{transform:translate(2px,-1px)} }
+    @keyframes cy-type { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+    .cy-body { animation: cy-float 3s ease-in-out infinite, cy-glitch 8s ease-in-out infinite; }
+    .cy-glow { animation: cy-glow 2s ease-in-out infinite; }
+    .cy-eye { animation: cy-eye 3s ease-in-out infinite; }
+    .cy-cl { animation: cy-type 1.5s ease-in-out infinite; }
+    .cy-cr { animation: cy-type 1.5s ease-in-out infinite .75s; }
+
+    /* ── ANIMATIONS: ZEN ── */
+    @keyframes zn-float { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-14px) scale(1.02)} }
+    @keyframes zn-aura { 0%,100%{transform:scale(1);opacity:.3} 50%{transform:scale(1.45);opacity:.08} }
+    @keyframes zn-breath { 0%,100%{transform:scale(1);opacity:.6} 50%{transform:scale(1.15);opacity:1} }
+    @keyframes zn-s1 { 0%{transform:translate(0,0) scale(1);opacity:.8} 100%{transform:translate(-8px,-44px) scale(.2);opacity:0} }
+    @keyframes zn-s2 { 0%{transform:translate(0,0) scale(1);opacity:.7} 100%{transform:translate(10px,-40px) scale(.2);opacity:0} }
+    @keyframes zn-s3 { 0%{transform:translate(0,0) scale(1);opacity:.6} 100%{transform:translate(16px,-36px) scale(.2);opacity:0} }
+    .zn-body { animation: zn-float 4s ease-in-out infinite; }
+    .zn-aura { animation: zn-aura 4s ease-in-out infinite; }
+    .zn-breath { animation: zn-breath 4s ease-in-out infinite; }
+    .zn-s1 { animation: zn-s1 3s ease-out infinite; }
+    .zn-s2 { animation: zn-s2 3s ease-out infinite 1s; }
+    .zn-s3 { animation: zn-s3 3s ease-out infinite 2s; }
+
+    /* ── ROADMAP ── */
+    .roadmap-section { max-width: 900px; margin: 0 auto 100px; padding: 0 24px; }
+    .roadmap-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-top: 40px; }
+    @media (max-width: 600px) { .roadmap-grid { grid-template-columns: 1fr; } }
+    .rm-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 22px; position: relative;
+    }
+    .rm-card .badge-label {
+      position: absolute; top: 14px; right: 14px;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.8px;
+      padding: 3px 8px; border-radius: 100px;
+    }
+    .soon .badge-label { color: var(--muted); background: var(--subtle); }
+    .future .badge-label { color: #A78BFA; background: rgba(167,139,250,0.1); }
+    .rm-emoji { font-size: 26px; margin-bottom: 11px; }
+    .rm-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+    .rm-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border); padding: 28px 48px;
+      display: flex; align-items: center; justify-content: space-between;
+      color: var(--muted); font-size: 13px;
+    }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--text); }
+
+    /* ── MODAL ── */
+    .overlay {
+      position: fixed; inset: 0; z-index: 100;
+      background: rgba(0,0,0,0.82); backdrop-filter: blur(12px);
+      display: flex; align-items: center; justify-content: center; padding: 24px;
+      opacity: 0; pointer-events: none; transition: opacity .25s;
+    }
+    .overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: var(--card); border: 1px solid var(--border); border-radius: 22px;
+      padding: 38px; max-width: 520px; width: 100%; position: relative;
+      transform: scale(.95); transition: transform .3s;
+    }
+    .overlay.open .modal { transform: scale(1); }
+    .modal-close {
+      position: absolute; top: 14px; right: 14px;
+      background: var(--subtle); border: none; color: var(--muted);
+      width: 30px; height: 30px; border-radius: 8px; font-size: 17px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all .2s;
+    }
+    .modal-close:hover { color: var(--text); }
+    .modal-title { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+    .modal-desc { font-size: 14px; color: var(--muted); margin-bottom: 26px; line-height: 1.6; }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed; bottom: 30px; left: 50%;
+      transform: translateX(-50%) translateY(70px);
+      background: var(--card); border: 1px solid var(--border);
+      color: var(--text); font-size: 13px; font-weight: 600;
+      padding: 11px 22px; border-radius: 100px;
+      display: flex; align-items: center; gap: 8px; z-index: 200;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+      transition: transform .4s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+    .fade-up { animation: fadeUp .5s ease both; }
+
+    /* ── INSTALL CMD BOX ── */
+    .install-cmd-wrap {
+      max-width: 680px; margin: 0 auto;
+    }
+    .install-cmd-box {
+      display: flex; align-items: center; gap: 12px;
+      background: #0D0D18; border: 1px solid rgba(232,67,58,0.35);
+      border-radius: 14px; padding: 16px 20px;
+      font-family: 'SF Mono', 'Fira Code', 'Menlo', monospace;
+      font-size: 14px;
+      box-shadow: 0 0 40px rgba(232,67,58,0.12), 0 0 0 1px rgba(232,67,58,0.08);
+      cursor: text; transition: border-color .2s, box-shadow .2s;
+    }
+    .install-cmd-box:hover {
+      border-color: rgba(232,67,58,0.6);
+      box-shadow: 0 0 60px rgba(232,67,58,0.2), 0 0 0 1px rgba(232,67,58,0.15);
+    }
+    .install-prompt { color: var(--red); flex-shrink: 0; user-select: none; }
+    .install-cmd {
+      flex: 1; color: #E8E8F8; overflow: hidden;
+      text-overflow: ellipsis; white-space: nowrap;
+      font-size: 13px;
+    }
+    .install-copy-btn {
+      flex-shrink: 0;
+      display: flex; align-items: center; gap: 6px;
+      background: rgba(232,67,58,0.15); border: 1px solid rgba(232,67,58,0.4);
+      color: var(--red); font-size: 12px; font-weight: 700;
+      padding: 7px 14px; border-radius: 8px; cursor: pointer;
+      transition: all .2s; white-space: nowrap;
+      font-family: -apple-system, sans-serif;
+    }
+    .install-copy-btn:hover { background: rgba(232,67,58,0.3); }
+    .install-copy-btn.copied { background: rgba(74,222,128,0.15); border-color: rgba(74,222,128,0.4); color: #4ADE80; }
+    .install-note {
+      font-size: 12px; color: var(--muted); margin-top: 10px; text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <svg class="logo-icon" viewBox="0 0 34 34" xmlns="http://www.w3.org/2000/svg">
+      <rect width="34" height="34" rx="8" fill="#E8433A"/>
+      <ellipse cx="17" cy="19" rx="7" ry="8" fill="#fff" opacity=".93"/>
+      <ellipse cx="17" cy="13" rx="6" ry="5" fill="#fff" opacity=".93"/>
+      <circle cx="13" cy="12" r="2.2" fill="#E8433A"/>
+      <circle cx="21" cy="12" r="2.2" fill="#E8433A"/>
+      <circle cx="13.5" cy="12" r="1" fill="#1A0000"/>
+      <circle cx="21.5" cy="12" r="1" fill="#1A0000"/>
+      <ellipse cx="7.5" cy="18" rx="3.8" ry="2.8" fill="#fff" opacity=".88" transform="rotate(-20 7.5 18)"/>
+      <ellipse cx="26.5" cy="18" rx="3.8" ry="2.8" fill="#fff" opacity=".88" transform="rotate(20 26.5 18)"/>
+    </svg>
+    <span class="logo-name">Open<span>Claw</span> Pets</span>
+  </div>
+  <nav>
+    <a href="#install">安装</a>
+    <a href="#styles">风格</a>
+    <a href="#roadmap">周边</a>
+  </nav>
+  <div class="badge">Public Beta</div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-tag">🦞 桌面萌宠 · 全球首发</div>
+  <h1>把 Molty 养在<br><em>你的桌面上</em></h1>
+  <p class="hero-sub">
+    复制一行命令，粘贴到终端。<br>自动读取 soul.md，30 秒后龙虾出现在桌面。
+  </p>
+
+  <!-- 核心安装命令 -->
+  <div class="install-cmd-wrap">
+    <div class="install-cmd-box" id="heroCmdBox">
+      <span class="install-prompt">$</span>
+      <span class="install-cmd" id="heroCmd">curl -fsSL https://raw.githubusercontent.com/shufanli/openclaw-pet/main/install-molty.sh | bash</span>
+      <button class="install-copy-btn" onclick="copyInstallCmd()" id="heroCopyBtn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        复制
+      </button>
+    </div>
+    <div class="install-note">
+      需要 macOS + Xcode CLI Tools（运行过 git 的 Mac 均已具备）
+    </div>
+  </div>
+
+  <a href="#styles" class="btn-ghost" style="margin-top:16px">预览三款风格 →</a>
+</section>
+
+<!-- HOW TO INSTALL -->
+<section class="steps-section" id="install">
+  <div class="section-title">
+    <h2>它做了什么</h2>
+    <p>一行命令，全自动完成以下四件事</p>
+  </div>
+
+  <div class="steps-track">
+    <div class="step-card">
+      <div class="step-emoji">🧬</div>
+      <div class="step-title">读取 soul.md</div>
+      <div class="step-desc">自动搜索 <code style="color:var(--red);font-size:12px">~/.openclaw/</code> 下的 soul.md，关键词分析性格，匹配经典 / 赛博 / 禅意三款风格。</div>
+    </div>
+    <div class="step-card">
+      <div class="step-emoji">⚙️</div>
+      <div class="step-title">编译原生 App</div>
+      <div class="step-desc">用系统自带的 <code style="color:var(--red);font-size:12px">swiftc</code> 编译一个真正的 macOS 浮窗 App，透明背景、点击穿透，约 15 秒。</div>
+    </div>
+    <div class="step-card">
+      <div class="step-emoji">🔁</div>
+      <div class="step-title">注册开机自启</div>
+      <div class="step-desc">写入 LaunchAgent，开机自动启动，崩溃自动重启。每 10 分钟重读 soul.md，风格随你成长。</div>
+    </div>
+  </div>
+
+  <!-- 预期输出 -->
+  <div class="terminal-snippet">
+    <div class="term-bar">
+      <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+      <span class="term-label">预期输出</span>
+    </div>
+    <div class="term-body">
+      <div class="term-line">
+        <span class="prompt">$</span>
+        <span class="cmd">curl -fsSL https://raw.githubusercontent.com/shufanli/openclaw-pet/main/install-molty.sh | bash</span>
+      </div>
+      <div class="term-line"><span class="term-out">  ✓ swiftc Swift 6.0 found</span></div>
+      <div class="term-line"><span class="term-out">  ✓ 找到 soul.md: ~/.openclaw/workspace/soul.md</span></div>
+      <div class="term-line"><span class="term-out">  ✓ 性格预测 → 赛博 Molty ⚡</span></div>
+      <div class="term-line"><span class="term-out">  ⚙  正在编译（首次约需 15 秒）...</span></div>
+      <div class="term-line"><span class="term-out">  ✓ LaunchAgent 已注册（开机自动启动）</span></div>
+      <div class="term-line"><span class="term-out">  🦞  赛博 Molty ⚡ 已出现在桌面右下角！</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PET STYLES -->
+<section class="pets-section" id="styles">
+  <div class="section-title">
+    <h2>三款 Molty</h2>
+    <p>脚本根据你的 soul.md 自动选择 · 也可以手动切换</p>
+  </div>
+
+  <div class="pets-grid">
+
+    <!-- CLASSIC -->
+    <div class="pet-card card-classic active" id="card-classic" onclick="pick('classic')">
+      <div class="pet-glow"></div>
+      <div class="recommended-badge">✦ 已选中</div>
+      <div class="pet-stage">
+        <svg viewBox="0 0 130 160" width="130" height="160" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="65" cy="148" rx="30" ry="6" fill="#E8433A" opacity="0.12"/>
+          <g class="cl-al"><path d="M 46 26 Q 28 12 18 2" stroke="#C0392B" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="18" cy="2" r="3" fill="#E8433A"/></g>
+          <g class="cl-ar"><path d="M 84 26 Q 102 12 112 2" stroke="#C0392B" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="112" cy="2" r="3" fill="#E8433A"/></g>
+          <path d="M 50 30 Q 38 22 32 16" stroke="#C0392B" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.7"/>
+          <path d="M 80 30 Q 92 22 98 16" stroke="#C0392B" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.7"/>
+          <g class="cl-body">
+            <ellipse cx="65" cy="44" rx="24" ry="20" fill="#E8433A"/>
+            <polygon points="65,18 59,30 71,30" fill="#C0392B"/>
+            <path d="M 42 46 Q 65 42 88 46" stroke="#C0392B" stroke-width="1.5" fill="none"/>
+            <rect x="46" y="32" width="7" height="11" rx="3.5" fill="#C0392B"/>
+            <rect x="77" y="32" width="7" height="11" rx="3.5" fill="#C0392B"/>
+            <g class="cl-eye">
+              <circle cx="50" cy="31" r="10" fill="white"/><circle cx="80" cy="31" r="10" fill="white"/>
+              <circle cx="52" cy="32" r="6" fill="#1A0000"/><circle cx="82" cy="32" r="6" fill="#1A0000"/>
+              <circle cx="54" cy="29" r="2.5" fill="white"/><circle cx="84" cy="29" r="2.5" fill="white"/>
+            </g>
+            <path d="M 56 52 Q 65 58 74 52" stroke="#C0392B" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <ellipse cx="65" cy="90" rx="20" ry="28" fill="#E8433A"/>
+            <path d="M 46 82 Q 65 78 84 82" stroke="#C0392B" stroke-width="1.5" fill="none"/>
+            <path d="M 46 92 Q 65 88 84 92" stroke="#C0392B" stroke-width="1.5" fill="none"/>
+            <path d="M 47 102 Q 65 98 83 102" stroke="#C0392B" stroke-width="1.5" fill="none"/>
+            <path d="M 48 80 Q 32 88 28 100" stroke="#C0392B" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <path d="M 47 90 Q 30 100 27 112" stroke="#C0392B" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <path d="M 47 100 Q 32 110 30 122" stroke="#C0392B" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <path d="M 82 80 Q 98 88 102 100" stroke="#C0392B" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <path d="M 83 90 Q 100 100 103 112" stroke="#C0392B" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <path d="M 83 100 Q 98 110 100 122" stroke="#C0392B" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <ellipse cx="65" cy="120" rx="15" ry="10" fill="#E8433A"/>
+            <ellipse cx="65" cy="130" rx="13" ry="9" fill="#D63B33"/>
+            <ellipse cx="42" cy="138" rx="13" ry="8" fill="#E8433A" transform="rotate(-30 42 138)"/>
+            <ellipse cx="65" cy="142" rx="12" ry="8" fill="#C0392B"/>
+            <ellipse cx="88" cy="138" rx="13" ry="8" fill="#E8433A" transform="rotate(30 88 138)"/>
+          </g>
+          <g class="cl-claw-l">
+            <path d="M 46 68 Q 20 60 10 72 Q 4 82 12 90 Q 20 97 34 90 Q 42 86 46 78" fill="#E8433A" stroke="#C0392B" stroke-width="1"/>
+            <path d="M 10 72 Q 2 64 10 57 Q 18 50 24 60 Q 18 66 12 70" fill="#D63B33"/>
+            <path d="M 12 90 Q 4 96 10 103 Q 18 109 26 100 Q 20 95 14 91" fill="#D63B33"/>
+            <path d="M 14 72 L 22 82" stroke="#C0392B" stroke-width="1.5" stroke-linecap="round"/>
+          </g>
+          <g class="cl-claw-r">
+            <path d="M 84 68 Q 110 60 120 72 Q 126 82 118 90 Q 110 97 96 90 Q 88 86 84 78" fill="#E8433A" stroke="#C0392B" stroke-width="1"/>
+            <path d="M 120 72 Q 128 64 120 57 Q 112 50 106 60 Q 112 66 118 70" fill="#D63B33"/>
+            <path d="M 118 90 Q 126 96 120 103 Q 112 109 104 100 Q 110 95 116 91" fill="#D63B33"/>
+            <path d="M 116 72 L 108 82" stroke="#C0392B" stroke-width="1.5" stroke-linecap="round"/>
+          </g>
+        </svg>
+      </div>
+      <div class="pet-name">经典 Molty</div>
+      <div class="pet-sub">活泼 · 热情 · 永远准备好了</div>
+      <div class="pet-tags"><span class="tag">开朗</span><span class="tag">高能量</span><span class="tag">社牛</span></div>
+      <button class="pet-btn">选择经典款</button>
+    </div>
+
+    <!-- CYBER -->
+    <div class="pet-card card-cyber" id="card-cyber" onclick="pick('cyber')">
+      <div class="pet-glow"></div>
+      <div class="recommended-badge">✦ 已选中</div>
+      <div class="pet-stage">
+        <svg viewBox="0 0 130 160" width="130" height="160" xmlns="http://www.w3.org/2000/svg">
+          <g opacity="0.12" font-family="monospace" font-size="8" fill="#00FFCC">
+            <text x="8" y="20">01</text><text x="8" y="32">10</text><text x="110" y="25">10</text><text x="110" y="37">01</text>
+            <text x="4" y="80">11</text><text x="115" y="75">00</text>
+          </g>
+          <g class="cy-glow"><ellipse cx="65" cy="80" rx="45" ry="55" fill="none" stroke="#00FFCC" stroke-width="1" opacity="0.2"/></g>
+          <path d="M 46 26 Q 28 12 18 2" stroke="#00FFCC" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.8"/>
+          <circle cx="18" cy="2" r="3" fill="#00FFCC"/>
+          <path d="M 84 26 Q 102 12 112 2" stroke="#00FFCC" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.8"/>
+          <circle cx="112" cy="2" r="3" fill="#00FFCC"/>
+          <g class="cy-body">
+            <ellipse cx="65" cy="44" rx="24" ry="20" fill="#0D0D1A" stroke="#00FFCC" stroke-width="1.5" opacity="0.9"/>
+            <polygon points="65,18 59,30 71,30" fill="#0D0D1A" stroke="#00FFCC" stroke-width="1"/>
+            <rect x="46" y="32" width="7" height="11" rx="3.5" fill="#0A0A14" stroke="#00FFCC" stroke-width="0.8"/>
+            <rect x="77" y="32" width="7" height="11" rx="3.5" fill="#0A0A14" stroke="#00FFCC" stroke-width="0.8"/>
+            <circle cx="50" cy="31" r="10" fill="#001A14" stroke="#00FFCC" stroke-width="1"/>
+            <circle cx="80" cy="31" r="10" fill="#001A14" stroke="#00FFCC" stroke-width="1"/>
+            <circle class="cy-eye" cx="52" cy="32" r="6" fill="#00FFCC"/>
+            <circle class="cy-eye" cx="82" cy="32" r="6" fill="#00FFCC" style="animation-delay:1.5s"/>
+            <line x1="42" y1="32" x2="58" y2="32" stroke="#fff" stroke-width="1.5" opacity="0.5"/>
+            <line x1="72" y1="32" x2="88" y2="32" stroke="#fff" stroke-width="1.5" opacity="0.5"/>
+            <path d="M 56 52 L 60 56 L 70 56 L 74 52 L 70 48 L 60 48 Z" fill="none" stroke="#00FFCC" stroke-width="1" opacity="0.7"/>
+            <text x="62" y="55" font-family="monospace" font-size="5" fill="#00FFCC">&gt;_</text>
+            <ellipse cx="65" cy="90" rx="20" ry="28" fill="#0D0D1A" stroke="#00FFCC" stroke-width="1.2" opacity="0.8"/>
+            <path d="M 46 82 Q 65 78 84 82" stroke="#00FFCC" stroke-width="1" fill="none" opacity="0.5"/>
+            <path d="M 46 92 Q 65 88 84 92" stroke="#00FFCC" stroke-width="1" fill="none" opacity="0.5"/>
+            <path d="M 47 102 Q 65 98 83 102" stroke="#00FFCC" stroke-width="1" fill="none" opacity="0.5"/>
+            <circle cx="65" cy="82" r="2" fill="#00FFCC" opacity="0.6"/>
+            <circle cx="65" cy="92" r="2" fill="#FF2D78" opacity="0.6"/>
+            <path d="M 48 80 Q 32 88 28 100" stroke="#00FFCC" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7"/>
+            <path d="M 47 90 Q 30 100 27 112" stroke="#00FFCC" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.6"/>
+            <path d="M 47 100 Q 32 110 30 122" stroke="#00FFCC" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.5"/>
+            <path d="M 82 80 Q 98 88 102 100" stroke="#00FFCC" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7"/>
+            <path d="M 83 90 Q 100 100 103 112" stroke="#00FFCC" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.6"/>
+            <path d="M 83 100 Q 98 110 100 122" stroke="#00FFCC" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.5"/>
+            <ellipse cx="65" cy="120" rx="15" ry="10" fill="#0D0D1A" stroke="#00FFCC" stroke-width="1" opacity="0.7"/>
+            <ellipse cx="65" cy="130" rx="13" ry="9" fill="#0D0D1A" stroke="#00FFCC" stroke-width="1" opacity="0.6"/>
+            <ellipse cx="42" cy="138" rx="13" ry="8" fill="#0D0D1A" stroke="#00FFCC" stroke-width="1" opacity="0.5" transform="rotate(-30 42 138)"/>
+            <ellipse cx="65" cy="142" rx="12" ry="8" fill="#0D0D1A" stroke="#00FFCC" stroke-width="1" opacity="0.6"/>
+            <ellipse cx="88" cy="138" rx="13" ry="8" fill="#0D0D1A" stroke="#00FFCC" stroke-width="1" opacity="0.5" transform="rotate(30 88 138)"/>
+          </g>
+          <g class="cy-cl">
+            <path d="M 46 68 Q 20 60 10 72 Q 4 82 12 90 Q 20 97 34 90 Q 42 86 46 78" fill="#0D0D1A" stroke="#00FFCC" stroke-width="1.5"/>
+            <path d="M 10 72 Q 2 64 10 57 Q 18 50 24 60 Q 18 66 12 70" fill="#001A14" stroke="#00FFCC" stroke-width="1"/>
+            <path d="M 12 90 Q 4 96 10 103 Q 18 109 26 100 Q 20 95 14 91" fill="#001A14" stroke="#00FFCC" stroke-width="1"/>
+            <path d="M 14 72 L 22 82" stroke="#FF2D78" stroke-width="1.5" stroke-linecap="round" opacity="0.8"/>
+          </g>
+          <g class="cy-cr">
+            <path d="M 84 68 Q 110 60 120 72 Q 126 82 118 90 Q 110 97 96 90 Q 88 86 84 78" fill="#0D0D1A" stroke="#00FFCC" stroke-width="1.5"/>
+            <path d="M 120 72 Q 128 64 120 57 Q 112 50 106 60 Q 112 66 118 70" fill="#001A14" stroke="#00FFCC" stroke-width="1"/>
+            <path d="M 118 90 Q 126 96 120 103 Q 112 109 104 100 Q 110 95 116 91" fill="#001A14" stroke="#00FFCC" stroke-width="1"/>
+            <path d="M 116 72 L 108 82" stroke="#FF2D78" stroke-width="1.5" stroke-linecap="round" opacity="0.8"/>
+          </g>
+          <text x="10" y="155" font-family="monospace" font-size="7" fill="#00FFCC" opacity="0.35">EXFOLIATE!</text>
+        </svg>
+      </div>
+      <div class="pet-name">赛博 Molty</div>
+      <div class="pet-sub">高效 · 精准 · EXFOLIATE!</div>
+      <div class="pet-tags"><span class="tag">极客</span><span class="tag">效率狂</span><span class="tag">黑客</span></div>
+      <button class="pet-btn">选择赛博款</button>
+    </div>
+
+    <!-- ZEN -->
+    <div class="pet-card card-zen" id="card-zen" onclick="pick('zen')">
+      <div class="pet-glow"></div>
+      <div class="recommended-badge">✦ 已选中</div>
+      <div class="pet-stage">
+        <svg viewBox="0 0 130 170" width="130" height="170" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="15" cy="15" r="1" fill="#A78BFA" opacity="0.5"/>
+          <circle cx="115" cy="20" r="1.5" fill="#A78BFA" opacity="0.3"/>
+          <circle cx="65" cy="10" r="1" fill="white" opacity="0.3"/>
+          <g class="zn-s1"><text x="26" y="55" font-size="10" fill="#A78BFA">✦</text></g>
+          <g class="zn-s2"><text x="96" y="65" font-size="8" fill="#C4B5FD">✧</text></g>
+          <g class="zn-s3"><text x="46" y="45" font-size="7" fill="#A78BFA">·</text></g>
+          <g class="zn-aura"><circle cx="65" cy="85" r="52" fill="none" stroke="#A78BFA" stroke-width="1" opacity="0.15"/></g>
+          <g class="zn-breath"><circle cx="65" cy="85" r="38" fill="none" stroke="#C4B5FD" stroke-width="1.5" opacity="0.2"/></g>
+          <path d="M 46 26 Q 30 18 22 8" stroke="#7C3AED" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <circle cx="22" cy="8" r="3" fill="#A78BFA"/>
+          <path d="M 84 26 Q 100 18 108 8" stroke="#7C3AED" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <circle cx="108" cy="8" r="3" fill="#A78BFA"/>
+          <g class="zn-body">
+            <ellipse cx="65" cy="44" rx="24" ry="20" fill="#EDE9FE" stroke="#A78BFA" stroke-width="1.5" opacity="0.8"/>
+            <polygon points="65,18 59,30 71,30" fill="#DDD6FE"/>
+            <rect x="46" y="32" width="7" height="11" rx="3.5" fill="#DDD6FE"/>
+            <rect x="77" y="32" width="7" height="11" rx="3.5" fill="#DDD6FE"/>
+            <circle cx="50" cy="31" r="10" fill="white"/><circle cx="80" cy="31" r="10" fill="white"/>
+            <path d="M 40 31 Q 50 22 60 31" fill="#EDE9FE"/>
+            <path d="M 70 31 Q 80 22 90 31" fill="#EDE9FE"/>
+            <circle cx="51" cy="33" r="5" fill="#5B21B6"/><circle cx="81" cy="33" r="5" fill="#5B21B6"/>
+            <circle cx="52" cy="31" r="2" fill="white" opacity="0.6"/><circle cx="82" cy="31" r="2" fill="white" opacity="0.6"/>
+            <path d="M 57 54 Q 65 60 73 54" stroke="#7C3AED" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <ellipse cx="65" cy="90" rx="20" ry="28" fill="#EDE9FE" stroke="#A78BFA" stroke-width="1" opacity="0.6"/>
+            <circle cx="65" cy="90" r="8" fill="none" stroke="#A78BFA" stroke-width="1" opacity="0.4"/>
+            <circle cx="65" cy="90" r="4" fill="#C4B5FD" opacity="0.4"/>
+            <path d="M 57 82 Q 65 78 73 82" stroke="#A78BFA" stroke-width="1" fill="none" opacity="0.5"/>
+            <path d="M 57 98 Q 65 102 73 98" stroke="#A78BFA" stroke-width="1" fill="none" opacity="0.5"/>
+            <path d="M 48 80 Q 32 88 28 100" stroke="#A78BFA" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.6"/>
+            <path d="M 47 90 Q 30 100 27 112" stroke="#A78BFA" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5"/>
+            <path d="M 47 100 Q 32 110 30 122" stroke="#A78BFA" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.4"/>
+            <path d="M 82 80 Q 98 88 102 100" stroke="#A78BFA" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.6"/>
+            <path d="M 83 90 Q 100 100 103 112" stroke="#A78BFA" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5"/>
+            <path d="M 83 100 Q 98 110 100 122" stroke="#A78BFA" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.4"/>
+            <ellipse cx="65" cy="120" rx="15" ry="10" fill="#EDE9FE" stroke="#A78BFA" stroke-width="1" opacity="0.7"/>
+            <ellipse cx="65" cy="130" rx="13" ry="9" fill="#DDD6FE" stroke="#A78BFA" stroke-width="1" opacity="0.6"/>
+            <ellipse cx="42" cy="138" rx="13" ry="8" fill="#EDE9FE" stroke="#A78BFA" stroke-width="1" opacity="0.5" transform="rotate(-30 42 138)"/>
+            <ellipse cx="65" cy="142" rx="12" ry="8" fill="#C4B5FD" stroke="#A78BFA" stroke-width="1" opacity="0.5"/>
+            <ellipse cx="88" cy="138" rx="13" ry="8" fill="#EDE9FE" stroke="#A78BFA" stroke-width="1" opacity="0.5" transform="rotate(30 88 138)"/>
+          </g>
+          <path d="M 46 68 Q 20 60 10 72 Q 4 82 12 90 Q 20 97 34 90 Q 42 86 46 78" fill="#EDE9FE" stroke="#A78BFA" stroke-width="1.5"/>
+          <path d="M 10 72 Q 2 64 10 57 Q 18 50 24 60 Q 18 66 12 70" fill="#DDD6FE" stroke="#A78BFA" stroke-width="1"/>
+          <path d="M 12 90 Q 4 96 10 103 Q 18 109 26 100 Q 20 95 14 91" fill="#DDD6FE" stroke="#A78BFA" stroke-width="1"/>
+          <path d="M 84 68 Q 110 60 120 72 Q 126 82 118 90 Q 110 97 96 90 Q 88 86 84 78" fill="#EDE9FE" stroke="#A78BFA" stroke-width="1.5"/>
+          <path d="M 120 72 Q 128 64 120 57 Q 112 50 106 60 Q 112 66 118 70" fill="#DDD6FE" stroke="#A78BFA" stroke-width="1"/>
+          <path d="M 118 90 Q 126 96 120 103 Q 112 109 104 100 Q 110 95 116 91" fill="#DDD6FE" stroke="#A78BFA" stroke-width="1"/>
+        </svg>
+      </div>
+      <div class="pet-name">禅意 Molty</div>
+      <div class="pet-sub">沉静 · 智慧 · The lobster way</div>
+      <div class="pet-tags"><span class="tag">深思</span><span class="tag">平和</span><span class="tag">通透</span></div>
+      <button class="pet-btn">选择禅意款</button>
+    </div>
+
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section class="roadmap-section" id="roadmap">
+  <div class="section-title">
+    <h2>让龙虾消费起来</h2>
+    <p>皮肤、配件、周边 —— 龙虾经济生态正在建立</p>
+  </div>
+  <div class="roadmap-grid">
+    <div class="rm-card">
+      <div class="rm-emoji">🎨</div>
+      <div class="rm-title">皮肤商店 ClawSkins</div>
+      <div class="rm-desc">节日限定、社区创作、品牌联名。让你的龙虾与众不同。</div>
+    </div>
+    <div class="rm-card soon"><span class="badge-label">Soon</span>
+      <div class="rm-emoji">🎭</div>
+      <div class="rm-title">情绪系统</div>
+      <div class="rm-desc">根据 OpenClaw 工作状态实时切换表情 —— 忙碌、休息、专注、摸鱼。</div>
+    </div>
+    <div class="rm-card soon"><span class="badge-label">Soon</span>
+      <div class="rm-emoji">🤝</div>
+      <div class="rm-title">双龙虾模式</div>
+      <div class="rm-desc">两个人的龙虾可以互相打招呼、传递消息，基于 OpenClaw P2P 网络。</div>
+    </div>
+    <div class="rm-card future"><span class="badge-label">Future</span>
+      <div class="rm-emoji">🏪</div>
+      <div class="rm-title">周边实体店</div>
+      <div class="rm-desc">Molty 毛绒玩具、亚克力立牌、机械键盘配件。你的皮肤可能变成实物。</div>
+    </div>
+    <div class="rm-card future"><span class="badge-label">Future</span>
+      <div class="rm-emoji">🧠</div>
+      <div class="rm-title">Soul.md 深度绑定</div>
+      <div class="rm-desc">龙虾学会你的说话方式，能替你回复消息、记录灵感，真正的数字分身。</div>
+    </div>
+    <div class="rm-card future"><span class="badge-label">Future</span>
+      <div class="rm-emoji">🌍</div>
+      <div class="rm-title">龙虾宇宙</div>
+      <div class="rm-desc">全球 Molty 持有者共建的虚拟世界。你的龙虾可以出去探险。</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span style="font-size:20px">🦞</span> OpenClaw Pets · The Lobster Way
+  </div>
+  <div style="display:flex;gap:22px">
+    <a href="#">GitHub</a><a href="#">ClawHub</a><a href="#">Discord</a>
+  </div>
+  <div>Made with ❤️ by the community</div>
+</footer>
+
+
+<!-- TOAST -->
+<div class="toast" id="toast"><span>🦞</span><span id="toastMsg">已复制</span></div>
+
+<script>
+  const INSTALL_CMD = 'curl -fsSL https://raw.githubusercontent.com/shufanli/openclaw-pet/main/install-molty.sh | bash';
+
+  let selected = 'classic';
+
+  function pick(style) {
+    selected = style;
+    ['classic','cyber','zen'].forEach(s =>
+      document.getElementById('card-' + s).classList.toggle('active', s === style)
+    );
+    const names = { classic:'经典 Molty 🦞', cyber:'赛博 Molty ⚡', zen:'禅意 Molty ✦' };
+    toast('已选择 ' + names[style]);
+  }
+
+  function copyInstallCmd() {
+    navigator.clipboard.writeText(INSTALL_CMD).then(() => {
+      const btn = document.getElementById('heroCopyBtn');
+      btn.classList.add('copied');
+      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> 已复制';
+      toast('命令已复制 · 打开终端粘贴即可 🦞');
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> 复制';
+      }, 3000);
+    });
+  }
+
+  function closeModal() {
+    document.getElementById('dlModal').classList.remove('open');
+  }
+
+  function toast(msg) {
+    const el = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => el.classList.remove('show'), 3000);
+  }
+
+  // 点击命令框也触发复制
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('heroCmdBox').addEventListener('click', copyInstallCmd);
+  });
+</script>
+</body>
+</html>
