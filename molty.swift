@@ -348,11 +348,7 @@ class MoltyApp: NSObject, NSApplicationDelegate, WKNavigationDelegate {
     var window: NSWindow!
     var webView: WKWebView!
     var refreshTimer: Timer?
-    var monitors: [Any] = []
-    var tracking = false
-    var hasDragged = false
-    var dragStart: NSPoint = .zero
-    var winStart: NSPoint = .zero
+    var localMonitors: [Any] = []
     let skinOrder = ["classic", "cyber", "zen"]
     let skinNames  = ["classic": "⚡ 赛博 Molty", "cyber": "✦ 禅意 Molty", "zen": "🦞 经典 Molty"]
     var currentSkin = "classic"
@@ -371,7 +367,7 @@ class MoltyApp: NSObject, NSApplicationDelegate, WKNavigationDelegate {
     }
 
     func js(_ code: String) {
-        DispatchQueue.main.async { self.webView.evaluateJavaScript(code, completionHandler: nil) }
+        webView.evaluateJavaScript(code, completionHandler: nil)
     }
 
     func applicationDidFinishLaunching(_ n: Notification) {
@@ -390,7 +386,7 @@ class MoltyApp: NSObject, NSApplicationDelegate, WKNavigationDelegate {
         window.backgroundColor = .clear
         window.hasShadow = false
         window.level = .floating
-        window.ignoresMouseEvents = true  // default: click-through
+        window.ignoresMouseEvents = false   // always interactive (100×145 is small)
         window.collectionBehavior = [.canJoinAllSpaces, .stationary, .ignoresCycle]
 
         let cfg = WKWebViewConfiguration()
@@ -401,84 +397,72 @@ class MoltyApp: NSObject, NSApplicationDelegate, WKNavigationDelegate {
         window.contentView = webView
         window.orderFront(nil)
 
-        setupMonitors()
+        // Intercept left-click before WKWebView — use trackEvents for reliable drag/up even outside window
+        if let m = NSEvent.addLocalMonitorForEvents(matching: .leftMouseDown, handler: { [weak self] event in
+            guard let self = self else { return event }
+            self.startDragTracking(event)
+            return nil   // consume: WKWebView never sees mouseDown
+        }) { localMonitors.append(m) }
+
+        // Consume right-click before WKWebView (prevents "Reload Page" context menu)
+        if let m = NSEvent.addLocalMonitorForEvents(matching: .rightMouseDown, handler: { [weak self] event in
+            guard let self = self else { return event }
+            self.handleRightClick()
+            return nil
+        }) { localMonitors.append(m) }
 
         refreshTimer = Timer.scheduledTimer(withTimeInterval: 600, repeats: true) { [weak self] _ in
             guard let self = self else { return }
             self.currentSkin = analyzeSoul()
-            let html = self.petHTML(for: self.currentSkin)
-            DispatchQueue.main.async { self.webView.loadHTMLString(html, baseURL: nil) }
+            self.webView.loadHTMLString(self.petHTML(for: self.currentSkin), baseURL: nil)
         }
     }
 
-    func setupMonitors() {
-        // Toggle click-through based on mouse position
-        if let m = NSEvent.addGlobalMonitorForEvents(matching: .mouseMoved, handler: { [weak self] _ in
-            guard let self = self, !self.tracking else { return }
-            DispatchQueue.main.async {
-                self.window.ignoresMouseEvents = !self.window.frame.contains(NSEvent.mouseLocation)
-            }
-        }) { monitors.append(m) }
+    // Synchronous drag loop — trackEvents tracks mouse even outside the window
+    func startDragTracking(_ downEvent: NSEvent) {
+        let startScreen = window.convertPoint(toScreen: downEvent.locationInWindow)
+        let startOrigin = window.frame.origin
+        var dragging = false
 
-        // Detect drag start
-        if let m = NSEvent.addGlobalMonitorForEvents(matching: .leftMouseDown, handler: { [weak self] _ in
-            guard let self = self else { return }
-            let pos = NSEvent.mouseLocation
-            guard self.window.frame.contains(pos) else { return }
-            self.tracking = true
-            self.hasDragged = false
-            self.dragStart = pos
-            self.winStart = self.window.frame.origin
-        }) { monitors.append(m) }
-
-        // Handle drag movement
-        if let m = NSEvent.addGlobalMonitorForEvents(matching: .leftMouseDragged, handler: { [weak self] _ in
-            guard let self = self, self.tracking else { return }
-            let pos = NSEvent.mouseLocation
-            let dx = pos.x - self.dragStart.x
-            let dy = pos.y - self.dragStart.y
-            guard abs(dx) > 3 || abs(dy) > 3 else { return }
-            if !self.hasDragged {
-                self.hasDragged = true
-                self.js("typeof onDragStart==='function'&&onDragStart()")
-            }
-            DispatchQueue.main.async {
-                self.window.setFrameOrigin(NSPoint(x: self.winStart.x + dx, y: self.winStart.y + dy))
-            }
-        }) { monitors.append(m) }
-
-        // Handle click or drag end
-        if let m = NSEvent.addGlobalMonitorForEvents(matching: .leftMouseUp, handler: { [weak self] _ in
-            guard let self = self, self.tracking else { return }
-            defer { self.tracking = false; self.hasDragged = false }
-            if !self.hasDragged {
-                self.js("typeof onPetClick==='function'&&onPetClick()")
-                DispatchQueue.main.async {
+        window.trackEvents(
+            matching: [.leftMouseDragged, .leftMouseUp],
+            timeout: NSEvent.foreverDuration,
+            mode: .eventTracking
+        ) { [weak self] event, stop in
+            guard let self = self, let event = event else { stop.pointee = true; return }
+            switch event.type {
+            case .leftMouseDragged:
+                let cur = self.window.convertPoint(toScreen: event.locationInWindow)
+                let dx = cur.x - startScreen.x
+                let dy = cur.y - startScreen.y
+                if abs(dx) > 3 || abs(dy) > 3 {
+                    if !dragging {
+                        dragging = true
+                        self.js("typeof onDragStart==='function'&&onDragStart()")
+                    }
+                    self.window.setFrameOrigin(NSPoint(x: startOrigin.x + dx, y: startOrigin.y + dy))
+                }
+            case .leftMouseUp:
+                if dragging {
+                    self.js("typeof onDragEnd==='function'&&onDragEnd()")
+                } else {
+                    self.js("typeof onPetClick==='function'&&onPetClick()")
                     NSWorkspace.shared.open(URL(string: "http://127.0.0.1:18789/")!)
                 }
-            } else {
-                self.js("typeof onDragEnd==='function'&&onDragEnd()")
+                stop.pointee = true
+            default: break
             }
-        }) { monitors.append(m) }
+        }
+    }
 
-        // Consume right-click locally so WKWebView never sees it (prevents native context menu)
-        if let m = NSEvent.addLocalMonitorForEvents(matching: .rightMouseDown, handler: { [weak self] event in
-            guard let self = self else { return event }
-            return self.window.frame.contains(NSEvent.mouseLocation) ? nil : event
-        }) { monitors.append(m) }
-
-        // Right-click: cycle through skins
-        if let m = NSEvent.addGlobalMonitorForEvents(matching: .rightMouseDown, handler: { [weak self] _ in
-            guard let self = self else { return }
-            guard self.window.frame.contains(NSEvent.mouseLocation) else { return }
-            let next = self.nextSkin()
-            let displayName = self.skinNames[next] ?? next
-            self.js("typeof onSkinSwitch==='function'&&onSkinSwitch('\(displayName)')")
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.65) {
-                self.currentSkin = next
-                self.webView.loadHTMLString(self.petHTML(for: next), baseURL: nil)
-            }
-        }) { monitors.append(m) }
+    func handleRightClick() {
+        let next = nextSkin()
+        let displayName = skinNames[next] ?? next
+        js("typeof onSkinSwitch==='function'&&onSkinSwitch('\(displayName)')")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.65) {
+            self.currentSkin = next
+            self.webView.loadHTMLString(self.petHTML(for: next), baseURL: nil)
+        }
     }
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
@@ -488,7 +472,7 @@ class MoltyApp: NSObject, NSApplicationDelegate, WKNavigationDelegate {
 
     func applicationWillTerminate(_ n: Notification) {
         refreshTimer?.invalidate()
-        monitors.forEach { NSEvent.removeMonitor($0) }
+        localMonitors.forEach { NSEvent.removeMonitor($0) }
     }
 }
 
