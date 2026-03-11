@@ -195,7 +195,29 @@
     .card-zen     { --pg: rgba(167,139,250,0.09); }
     .pet-card:hover .pet-glow, .pet-card.active .pet-glow { opacity: 1; }
 
-    .pet-stage { width: 160px; height: 185px; display: flex; align-items: center; justify-content: center; margin-bottom: 22px; }
+    .pet-stage { width: 160px; height: 160px; display: flex; align-items: center; justify-content: center; margin-bottom: 22px; position: relative; }
+    .pet-img {
+      width: 140px; height: 140px; object-fit: contain;
+      image-rendering: auto;
+      border-radius: 8px;
+    }
+    /* Classic: bounce + subtle sway */
+    .card-classic .pet-img {
+      animation: molty-bounce 2s ease-in-out infinite, molty-sway 4s ease-in-out infinite;
+      filter: drop-shadow(0 8px 16px rgba(232,67,58,0.35));
+    }
+    /* Cyber: hue-shift to cyan/teal + glitch + neon glow */
+    .card-cyber .pet-img {
+      filter: hue-rotate(160deg) saturate(1.6) brightness(1.1)
+              drop-shadow(0 0 12px rgba(0,255,204,0.6)) drop-shadow(0 0 30px rgba(0,255,204,0.3));
+      animation: molty-cyber-float 3s ease-in-out infinite, molty-glitch 8s ease-in-out infinite, molty-neon-pulse 2s ease-in-out infinite;
+    }
+    /* Zen: hue-shift to purple + gentle float + aura */
+    .card-zen .pet-img {
+      filter: hue-rotate(260deg) saturate(0.7) brightness(1.05)
+              drop-shadow(0 0 14px rgba(167,139,250,0.5)) drop-shadow(0 0 36px rgba(167,139,250,0.2));
+      animation: molty-zen-float 4s ease-in-out infinite, molty-breathe 4s ease-in-out infinite;
+    }
     .pet-name { font-size: 20px; font-weight: 800; letter-spacing: -0.4px; margin-bottom: 5px; }
     .pet-sub { font-size: 12px; color: var(--muted); margin-bottom: 15px; text-align: center; }
     .pet-tags { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 22px; }
@@ -220,45 +242,43 @@
     }
     .pet-card.active .recommended-badge { display: block; }
 
-    /* ── ANIMATIONS: CLASSIC ── */
-    @keyframes cl-bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
-    @keyframes cl-wl { 0%,100%{transform:rotate(0);transform-origin:80% 80%} 40%{transform:rotate(-28deg);transform-origin:80% 80%} }
-    @keyframes cl-wr { 0%,100%{transform:rotate(0);transform-origin:20% 80%} 40%{transform:rotate(28deg);transform-origin:20% 80%} }
-    @keyframes cl-blink { 0%,88%,100%{transform:scaleY(1)} 93%{transform:scaleY(0.08)} }
-    @keyframes cl-al { 0%,100%{transform:rotate(0);transform-origin:70% 100%} 50%{transform:rotate(-8deg);transform-origin:70% 100%} }
-    @keyframes cl-ar { 0%,100%{transform:rotate(0);transform-origin:30% 100%} 50%{transform:rotate(8deg);transform-origin:30% 100%} }
-    .cl-body { animation: cl-bounce 2s ease-in-out infinite; }
-    .cl-claw-l { animation: cl-wl 3s ease-in-out infinite .5s; }
-    .cl-claw-r { animation: cl-wr 3s ease-in-out infinite; }
-    .cl-eye { animation: cl-blink 4s ease-in-out infinite; }
-    .cl-al { animation: cl-al 2.5s ease-in-out infinite; }
-    .cl-ar { animation: cl-ar 2.5s ease-in-out infinite .3s; }
+    /* ── ANIMATIONS: CLASSIC (bounce + sway) ── */
+    @keyframes molty-bounce {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+    @keyframes molty-sway {
+      0%,100% { transform: rotate(0deg); }
+      25% { transform: rotate(-3deg); }
+      75% { transform: rotate(3deg); }
+    }
 
-    /* ── ANIMATIONS: CYBER ── */
-    @keyframes cy-float { 0%,100%{transform:translateY(0) rotate(0)} 25%{transform:translateY(-6px) rotate(-1deg)} 75%{transform:translateY(-4px) rotate(1deg)} }
-    @keyframes cy-glow { 0%,100%{filter:drop-shadow(0 0 8px #00FFCC) drop-shadow(0 0 20px rgba(0,255,204,.4))} 50%{filter:drop-shadow(0 0 16px #00FFCC) drop-shadow(0 0 44px rgba(0,255,204,.7))} }
-    @keyframes cy-eye { 0%,100%{fill:#00FFCC} 50%{fill:#FF2D78} }
-    @keyframes cy-glitch { 0%,88%,100%{transform:translate(0)} 90%{transform:translate(-2px,1px)} 94%{transform:translate(2px,-1px)} }
-    @keyframes cy-type { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
-    .cy-body { animation: cy-float 3s ease-in-out infinite, cy-glitch 8s ease-in-out infinite; }
-    .cy-glow { animation: cy-glow 2s ease-in-out infinite; }
-    .cy-eye { animation: cy-eye 3s ease-in-out infinite; }
-    .cy-cl { animation: cy-type 1.5s ease-in-out infinite; }
-    .cy-cr { animation: cy-type 1.5s ease-in-out infinite .75s; }
+    /* ── ANIMATIONS: CYBER (float + glitch + neon pulse) ── */
+    @keyframes molty-cyber-float {
+      0%,100% { transform: translateY(0) rotate(0); }
+      25% { transform: translateY(-8px) rotate(-2deg); }
+      75% { transform: translateY(-5px) rotate(2deg); }
+    }
+    @keyframes molty-glitch {
+      0%,85%,100% { transform: translate(0); }
+      88% { transform: translate(-3px, 2px) skewX(-1deg); }
+      91% { transform: translate(3px, -1px) skewX(1deg); }
+      94% { transform: translate(-1px, 1px); }
+    }
+    @keyframes molty-neon-pulse {
+      0%,100% { filter: hue-rotate(160deg) saturate(1.6) brightness(1.1) drop-shadow(0 0 12px rgba(0,255,204,0.6)) drop-shadow(0 0 30px rgba(0,255,204,0.3)); }
+      50% { filter: hue-rotate(160deg) saturate(1.8) brightness(1.25) drop-shadow(0 0 20px rgba(0,255,204,0.9)) drop-shadow(0 0 50px rgba(0,255,204,0.5)); }
+    }
 
-    /* ── ANIMATIONS: ZEN ── */
-    @keyframes zn-float { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-14px) scale(1.02)} }
-    @keyframes zn-aura { 0%,100%{transform:scale(1);opacity:.3} 50%{transform:scale(1.45);opacity:.08} }
-    @keyframes zn-breath { 0%,100%{transform:scale(1);opacity:.6} 50%{transform:scale(1.15);opacity:1} }
-    @keyframes zn-s1 { 0%{transform:translate(0,0) scale(1);opacity:.8} 100%{transform:translate(-8px,-44px) scale(.2);opacity:0} }
-    @keyframes zn-s2 { 0%{transform:translate(0,0) scale(1);opacity:.7} 100%{transform:translate(10px,-40px) scale(.2);opacity:0} }
-    @keyframes zn-s3 { 0%{transform:translate(0,0) scale(1);opacity:.6} 100%{transform:translate(16px,-36px) scale(.2);opacity:0} }
-    .zn-body { animation: zn-float 4s ease-in-out infinite; }
-    .zn-aura { animation: zn-aura 4s ease-in-out infinite; }
-    .zn-breath { animation: zn-breath 4s ease-in-out infinite; }
-    .zn-s1 { animation: zn-s1 3s ease-out infinite; }
-    .zn-s2 { animation: zn-s2 3s ease-out infinite 1s; }
-    .zn-s3 { animation: zn-s3 3s ease-out infinite 2s; }
+    /* ── ANIMATIONS: ZEN (gentle float + breathe) ── */
+    @keyframes molty-zen-float {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-16px); }
+    }
+    @keyframes molty-breathe {
+      0%,100% { transform: scale(1); }
+      50% { transform: scale(1.04); }
+    }
 
     /* ── ROADMAP ── */
     .roadmap-section { max-width: 900px; margin: 0 auto 100px; padding: 0 24px; }
@@ -481,53 +501,7 @@
       <div class="pet-glow"></div>
       <div class="recommended-badge">✦ 已选中</div>
       <div class="pet-stage">
-        <svg viewBox="0 0 130 160" width="130" height="160" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="65" cy="148" rx="30" ry="6" fill="#E8433A" opacity="0.12"/>
-          <g class="cl-al"><path d="M 46 26 Q 28 12 18 2" stroke="#C0392B" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="18" cy="2" r="3" fill="#E8433A"/></g>
-          <g class="cl-ar"><path d="M 84 26 Q 102 12 112 2" stroke="#C0392B" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="112" cy="2" r="3" fill="#E8433A"/></g>
-          <path d="M 50 30 Q 38 22 32 16" stroke="#C0392B" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.7"/>
-          <path d="M 80 30 Q 92 22 98 16" stroke="#C0392B" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.7"/>
-          <g class="cl-body">
-            <ellipse cx="65" cy="44" rx="24" ry="20" fill="#E8433A"/>
-            <polygon points="65,18 59,30 71,30" fill="#C0392B"/>
-            <path d="M 42 46 Q 65 42 88 46" stroke="#C0392B" stroke-width="1.5" fill="none"/>
-            <rect x="46" y="32" width="7" height="11" rx="3.5" fill="#C0392B"/>
-            <rect x="77" y="32" width="7" height="11" rx="3.5" fill="#C0392B"/>
-            <g class="cl-eye">
-              <circle cx="50" cy="31" r="10" fill="white"/><circle cx="80" cy="31" r="10" fill="white"/>
-              <circle cx="52" cy="32" r="6" fill="#1A0000"/><circle cx="82" cy="32" r="6" fill="#1A0000"/>
-              <circle cx="54" cy="29" r="2.5" fill="white"/><circle cx="84" cy="29" r="2.5" fill="white"/>
-            </g>
-            <path d="M 56 52 Q 65 58 74 52" stroke="#C0392B" stroke-width="2" fill="none" stroke-linecap="round"/>
-            <ellipse cx="65" cy="90" rx="20" ry="28" fill="#E8433A"/>
-            <path d="M 46 82 Q 65 78 84 82" stroke="#C0392B" stroke-width="1.5" fill="none"/>
-            <path d="M 46 92 Q 65 88 84 92" stroke="#C0392B" stroke-width="1.5" fill="none"/>
-            <path d="M 47 102 Q 65 98 83 102" stroke="#C0392B" stroke-width="1.5" fill="none"/>
-            <path d="M 48 80 Q 32 88 28 100" stroke="#C0392B" stroke-width="3" fill="none" stroke-linecap="round"/>
-            <path d="M 47 90 Q 30 100 27 112" stroke="#C0392B" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-            <path d="M 47 100 Q 32 110 30 122" stroke="#C0392B" stroke-width="2" fill="none" stroke-linecap="round"/>
-            <path d="M 82 80 Q 98 88 102 100" stroke="#C0392B" stroke-width="3" fill="none" stroke-linecap="round"/>
-            <path d="M 83 90 Q 100 100 103 112" stroke="#C0392B" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-            <path d="M 83 100 Q 98 110 100 122" stroke="#C0392B" stroke-width="2" fill="none" stroke-linecap="round"/>
-            <ellipse cx="65" cy="120" rx="15" ry="10" fill="#E8433A"/>
-            <ellipse cx="65" cy="130" rx="13" ry="9" fill="#D63B33"/>
-            <ellipse cx="42" cy="138" rx="13" ry="8" fill="#E8433A" transform="rotate(-30 42 138)"/>
-            <ellipse cx="65" cy="142" rx="12" ry="8" fill="#C0392B"/>
-            <ellipse cx="88" cy="138" rx="13" ry="8" fill="#E8433A" transform="rotate(30 88 138)"/>
-          </g>
-          <g class="cl-claw-l">
-            <path d="M 46 68 Q 20 60 10 72 Q 4 82 12 90 Q 20 97 34 90 Q 42 86 46 78" fill="#E8433A" stroke="#C0392B" stroke-width="1"/>
-            <path d="M 10 72 Q 2 64 10 57 Q 18 50 24 60 Q 18 66 12 70" fill="#D63B33"/>
-            <path d="M 12 90 Q 4 96 10 103 Q 18 109 26 100 Q 20 95 14 91" fill="#D63B33"/>
-            <path d="M 14 72 L 22 82" stroke="#C0392B" stroke-width="1.5" stroke-linecap="round"/>
-          </g>
-          <g class="cl-claw-r">
-            <path d="M 84 68 Q 110 60 120 72 Q 126 82 118 90 Q 110 97 96 90 Q 88 86 84 78" fill="#E8433A" stroke="#C0392B" stroke-width="1"/>
-            <path d="M 120 72 Q 128 64 120 57 Q 112 50 106 60 Q 112 66 118 70" fill="#D63B33"/>
-            <path d="M 118 90 Q 126 96 120 103 Q 112 109 104 100 Q 110 95 116 91" fill="#D63B33"/>
-            <path d="M 116 72 L 108 82" stroke="#C0392B" stroke-width="1.5" stroke-linecap="round"/>
-          </g>
-        </svg>
+        <img class="pet-img" src="molty.png" alt="Classic Molty">
       </div>
       <div class="pet-name">经典 Molty</div>
       <div class="pet-sub">活泼 · 热情 · 永远准备好了</div>
@@ -540,61 +514,7 @@
       <div class="pet-glow"></div>
       <div class="recommended-badge">✦ 已选中</div>
       <div class="pet-stage">
-        <svg viewBox="0 0 130 160" width="130" height="160" xmlns="http://www.w3.org/2000/svg">
-          <g opacity="0.12" font-family="monospace" font-size="8" fill="#00FFCC">
-            <text x="8" y="20">01</text><text x="8" y="32">10</text><text x="110" y="25">10</text><text x="110" y="37">01</text>
-            <text x="4" y="80">11</text><text x="115" y="75">00</text>
-          </g>
-          <g class="cy-glow"><ellipse cx="65" cy="80" rx="45" ry="55" fill="none" stroke="#00FFCC" stroke-width="1" opacity="0.2"/></g>
-          <path d="M 46 26 Q 28 12 18 2" stroke="#00FFCC" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.8"/>
-          <circle cx="18" cy="2" r="3" fill="#00FFCC"/>
-          <path d="M 84 26 Q 102 12 112 2" stroke="#00FFCC" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.8"/>
-          <circle cx="112" cy="2" r="3" fill="#00FFCC"/>
-          <g class="cy-body">
-            <ellipse cx="65" cy="44" rx="24" ry="20" fill="#0D0D1A" stroke="#00FFCC" stroke-width="1.5" opacity="0.9"/>
-            <polygon points="65,18 59,30 71,30" fill="#0D0D1A" stroke="#00FFCC" stroke-width="1"/>
-            <rect x="46" y="32" width="7" height="11" rx="3.5" fill="#0A0A14" stroke="#00FFCC" stroke-width="0.8"/>
-            <rect x="77" y="32" width="7" height="11" rx="3.5" fill="#0A0A14" stroke="#00FFCC" stroke-width="0.8"/>
-            <circle cx="50" cy="31" r="10" fill="#001A14" stroke="#00FFCC" stroke-width="1"/>
-            <circle cx="80" cy="31" r="10" fill="#001A14" stroke="#00FFCC" stroke-width="1"/>
-            <circle class="cy-eye" cx="52" cy="32" r="6" fill="#00FFCC"/>
-            <circle class="cy-eye" cx="82" cy="32" r="6" fill="#00FFCC" style="animation-delay:1.5s"/>
-            <line x1="42" y1="32" x2="58" y2="32" stroke="#fff" stroke-width="1.5" opacity="0.5"/>
-            <line x1="72" y1="32" x2="88" y2="32" stroke="#fff" stroke-width="1.5" opacity="0.5"/>
-            <path d="M 56 52 L 60 56 L 70 56 L 74 52 L 70 48 L 60 48 Z" fill="none" stroke="#00FFCC" stroke-width="1" opacity="0.7"/>
-            <text x="62" y="55" font-family="monospace" font-size="5" fill="#00FFCC">&gt;_</text>
-            <ellipse cx="65" cy="90" rx="20" ry="28" fill="#0D0D1A" stroke="#00FFCC" stroke-width="1.2" opacity="0.8"/>
-            <path d="M 46 82 Q 65 78 84 82" stroke="#00FFCC" stroke-width="1" fill="none" opacity="0.5"/>
-            <path d="M 46 92 Q 65 88 84 92" stroke="#00FFCC" stroke-width="1" fill="none" opacity="0.5"/>
-            <path d="M 47 102 Q 65 98 83 102" stroke="#00FFCC" stroke-width="1" fill="none" opacity="0.5"/>
-            <circle cx="65" cy="82" r="2" fill="#00FFCC" opacity="0.6"/>
-            <circle cx="65" cy="92" r="2" fill="#FF2D78" opacity="0.6"/>
-            <path d="M 48 80 Q 32 88 28 100" stroke="#00FFCC" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7"/>
-            <path d="M 47 90 Q 30 100 27 112" stroke="#00FFCC" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.6"/>
-            <path d="M 47 100 Q 32 110 30 122" stroke="#00FFCC" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.5"/>
-            <path d="M 82 80 Q 98 88 102 100" stroke="#00FFCC" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7"/>
-            <path d="M 83 90 Q 100 100 103 112" stroke="#00FFCC" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.6"/>
-            <path d="M 83 100 Q 98 110 100 122" stroke="#00FFCC" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.5"/>
-            <ellipse cx="65" cy="120" rx="15" ry="10" fill="#0D0D1A" stroke="#00FFCC" stroke-width="1" opacity="0.7"/>
-            <ellipse cx="65" cy="130" rx="13" ry="9" fill="#0D0D1A" stroke="#00FFCC" stroke-width="1" opacity="0.6"/>
-            <ellipse cx="42" cy="138" rx="13" ry="8" fill="#0D0D1A" stroke="#00FFCC" stroke-width="1" opacity="0.5" transform="rotate(-30 42 138)"/>
-            <ellipse cx="65" cy="142" rx="12" ry="8" fill="#0D0D1A" stroke="#00FFCC" stroke-width="1" opacity="0.6"/>
-            <ellipse cx="88" cy="138" rx="13" ry="8" fill="#0D0D1A" stroke="#00FFCC" stroke-width="1" opacity="0.5" transform="rotate(30 88 138)"/>
-          </g>
-          <g class="cy-cl">
-            <path d="M 46 68 Q 20 60 10 72 Q 4 82 12 90 Q 20 97 34 90 Q 42 86 46 78" fill="#0D0D1A" stroke="#00FFCC" stroke-width="1.5"/>
-            <path d="M 10 72 Q 2 64 10 57 Q 18 50 24 60 Q 18 66 12 70" fill="#001A14" stroke="#00FFCC" stroke-width="1"/>
-            <path d="M 12 90 Q 4 96 10 103 Q 18 109 26 100 Q 20 95 14 91" fill="#001A14" stroke="#00FFCC" stroke-width="1"/>
-            <path d="M 14 72 L 22 82" stroke="#FF2D78" stroke-width="1.5" stroke-linecap="round" opacity="0.8"/>
-          </g>
-          <g class="cy-cr">
-            <path d="M 84 68 Q 110 60 120 72 Q 126 82 118 90 Q 110 97 96 90 Q 88 86 84 78" fill="#0D0D1A" stroke="#00FFCC" stroke-width="1.5"/>
-            <path d="M 120 72 Q 128 64 120 57 Q 112 50 106 60 Q 112 66 118 70" fill="#001A14" stroke="#00FFCC" stroke-width="1"/>
-            <path d="M 118 90 Q 126 96 120 103 Q 112 109 104 100 Q 110 95 116 91" fill="#001A14" stroke="#00FFCC" stroke-width="1"/>
-            <path d="M 116 72 L 108 82" stroke="#FF2D78" stroke-width="1.5" stroke-linecap="round" opacity="0.8"/>
-          </g>
-          <text x="10" y="155" font-family="monospace" font-size="7" fill="#00FFCC" opacity="0.35">EXFOLIATE!</text>
-        </svg>
+        <img class="pet-img" src="molty.png" alt="Cyber Molty">
       </div>
       <div class="pet-name">赛博 Molty</div>
       <div class="pet-sub">高效 · 精准 · EXFOLIATE!</div>
@@ -607,54 +527,7 @@
       <div class="pet-glow"></div>
       <div class="recommended-badge">✦ 已选中</div>
       <div class="pet-stage">
-        <svg viewBox="0 0 130 170" width="130" height="170" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="15" cy="15" r="1" fill="#A78BFA" opacity="0.5"/>
-          <circle cx="115" cy="20" r="1.5" fill="#A78BFA" opacity="0.3"/>
-          <circle cx="65" cy="10" r="1" fill="white" opacity="0.3"/>
-          <g class="zn-s1"><text x="26" y="55" font-size="10" fill="#A78BFA">✦</text></g>
-          <g class="zn-s2"><text x="96" y="65" font-size="8" fill="#C4B5FD">✧</text></g>
-          <g class="zn-s3"><text x="46" y="45" font-size="7" fill="#A78BFA">·</text></g>
-          <g class="zn-aura"><circle cx="65" cy="85" r="52" fill="none" stroke="#A78BFA" stroke-width="1" opacity="0.15"/></g>
-          <g class="zn-breath"><circle cx="65" cy="85" r="38" fill="none" stroke="#C4B5FD" stroke-width="1.5" opacity="0.2"/></g>
-          <path d="M 46 26 Q 30 18 22 8" stroke="#7C3AED" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-          <circle cx="22" cy="8" r="3" fill="#A78BFA"/>
-          <path d="M 84 26 Q 100 18 108 8" stroke="#7C3AED" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-          <circle cx="108" cy="8" r="3" fill="#A78BFA"/>
-          <g class="zn-body">
-            <ellipse cx="65" cy="44" rx="24" ry="20" fill="#EDE9FE" stroke="#A78BFA" stroke-width="1.5" opacity="0.8"/>
-            <polygon points="65,18 59,30 71,30" fill="#DDD6FE"/>
-            <rect x="46" y="32" width="7" height="11" rx="3.5" fill="#DDD6FE"/>
-            <rect x="77" y="32" width="7" height="11" rx="3.5" fill="#DDD6FE"/>
-            <circle cx="50" cy="31" r="10" fill="white"/><circle cx="80" cy="31" r="10" fill="white"/>
-            <path d="M 40 31 Q 50 22 60 31" fill="#EDE9FE"/>
-            <path d="M 70 31 Q 80 22 90 31" fill="#EDE9FE"/>
-            <circle cx="51" cy="33" r="5" fill="#5B21B6"/><circle cx="81" cy="33" r="5" fill="#5B21B6"/>
-            <circle cx="52" cy="31" r="2" fill="white" opacity="0.6"/><circle cx="82" cy="31" r="2" fill="white" opacity="0.6"/>
-            <path d="M 57 54 Q 65 60 73 54" stroke="#7C3AED" stroke-width="2" fill="none" stroke-linecap="round"/>
-            <ellipse cx="65" cy="90" rx="20" ry="28" fill="#EDE9FE" stroke="#A78BFA" stroke-width="1" opacity="0.6"/>
-            <circle cx="65" cy="90" r="8" fill="none" stroke="#A78BFA" stroke-width="1" opacity="0.4"/>
-            <circle cx="65" cy="90" r="4" fill="#C4B5FD" opacity="0.4"/>
-            <path d="M 57 82 Q 65 78 73 82" stroke="#A78BFA" stroke-width="1" fill="none" opacity="0.5"/>
-            <path d="M 57 98 Q 65 102 73 98" stroke="#A78BFA" stroke-width="1" fill="none" opacity="0.5"/>
-            <path d="M 48 80 Q 32 88 28 100" stroke="#A78BFA" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.6"/>
-            <path d="M 47 90 Q 30 100 27 112" stroke="#A78BFA" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5"/>
-            <path d="M 47 100 Q 32 110 30 122" stroke="#A78BFA" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.4"/>
-            <path d="M 82 80 Q 98 88 102 100" stroke="#A78BFA" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.6"/>
-            <path d="M 83 90 Q 100 100 103 112" stroke="#A78BFA" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5"/>
-            <path d="M 83 100 Q 98 110 100 122" stroke="#A78BFA" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.4"/>
-            <ellipse cx="65" cy="120" rx="15" ry="10" fill="#EDE9FE" stroke="#A78BFA" stroke-width="1" opacity="0.7"/>
-            <ellipse cx="65" cy="130" rx="13" ry="9" fill="#DDD6FE" stroke="#A78BFA" stroke-width="1" opacity="0.6"/>
-            <ellipse cx="42" cy="138" rx="13" ry="8" fill="#EDE9FE" stroke="#A78BFA" stroke-width="1" opacity="0.5" transform="rotate(-30 42 138)"/>
-            <ellipse cx="65" cy="142" rx="12" ry="8" fill="#C4B5FD" stroke="#A78BFA" stroke-width="1" opacity="0.5"/>
-            <ellipse cx="88" cy="138" rx="13" ry="8" fill="#EDE9FE" stroke="#A78BFA" stroke-width="1" opacity="0.5" transform="rotate(30 88 138)"/>
-          </g>
-          <path d="M 46 68 Q 20 60 10 72 Q 4 82 12 90 Q 20 97 34 90 Q 42 86 46 78" fill="#EDE9FE" stroke="#A78BFA" stroke-width="1.5"/>
-          <path d="M 10 72 Q 2 64 10 57 Q 18 50 24 60 Q 18 66 12 70" fill="#DDD6FE" stroke="#A78BFA" stroke-width="1"/>
-          <path d="M 12 90 Q 4 96 10 103 Q 18 109 26 100 Q 20 95 14 91" fill="#DDD6FE" stroke="#A78BFA" stroke-width="1"/>
-          <path d="M 84 68 Q 110 60 120 72 Q 126 82 118 90 Q 110 97 96 90 Q 88 86 84 78" fill="#EDE9FE" stroke="#A78BFA" stroke-width="1.5"/>
-          <path d="M 120 72 Q 128 64 120 57 Q 112 50 106 60 Q 112 66 118 70" fill="#DDD6FE" stroke="#A78BFA" stroke-width="1"/>
-          <path d="M 118 90 Q 126 96 120 103 Q 112 109 104 100 Q 110 95 116 91" fill="#DDD6FE" stroke="#A78BFA" stroke-width="1"/>
-        </svg>
+        <img class="pet-img" src="molty.png" alt="Zen Molty">
       </div>
       <div class="pet-name">禅意 Molty</div>
       <div class="pet-sub">沉静 · 智慧 · The lobster way</div>
